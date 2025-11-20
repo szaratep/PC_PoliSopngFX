@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controllers.PlayListDetalleController">
+
+    <top>
+        <ToolBar>
+            <Button text="Agregar Canción" onAction="#onAgregarCancion"/>
+            <Button text="Quitar Canción" onAction="#onQuitarCancion"/>
+        </ToolBar>
+    </top>
+
+    <center>
+        <TableView fx:id="tablaCancionesPlaylist">
+
+            <columns>
+                <TableColumn fx:id="colId" text="ID" prefWidth="80"/>
+                <TableColumn fx:id="colNombre" text="Nombre" prefWidth="150"/>
+                <TableColumn fx:id="colArtista" text="Artista" prefWidth="150"/>
+            </columns>
+
+        </TableView>
+    </center>
+
+</BorderPane>

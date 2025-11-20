@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controllers.MP3Controller">
+
+    <top>
+        <ToolBar>
+            <Button text="Agregar MP3" onAction="#onAgregar" />
+            <Button text="Editar" onAction="#onEditar" />
+            <Button text="Eliminar" onAction="#onEliminar" />
+        </ToolBar>
+    </top>
+
+    <center>
+        <TableView fx:id="tablaMP3">
+
+            <columns>
+                <TableColumn fx:id="colId" text="ID" prefWidth="80"/>
+                <TableColumn fx:id="colNombre" text="Nombre" prefWidth="150"/>
+                <TableColumn fx:id="colTam" text="Tamaño" prefWidth="100"/>
+                <TableColumn fx:id="colPrecio" text="Precio" prefWidth="100"/>
+            </columns>
+
+        </TableView>
+    </center>
+
+</BorderPane>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controllers.ProveedoresController">
+
+    <top>
+        <ToolBar>
+            <Button text="Nuevo Proveedor" onAction="#onNuevo"/>
+            <Button text="Editar" onAction="#onEditar"/>
+            <Button text="Eliminar" onAction="#onEliminar"/>
+        </ToolBar>
+    </top>
+
+    <center>
+        <TableView fx:id="tablaProveedores">
+
+            <columns>
+                <TableColumn fx:id="colId" text="ID" prefWidth="80"/>
+                <TableColumn fx:id="colNombre" text="Nombre" prefWidth="150"/>
+                <TableColumn fx:id="colEmail" text="Email" prefWidth="150"/>
+            </columns>
+
+        </TableView>
+    </center>
+
+</BorderPane>

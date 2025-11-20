@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controllers.PedidoDetalleController">
+
+    <top>
+        <ToolBar>
+            <Label text="Detalle del Pedido" />
+        </ToolBar>
+    </top>
+
+    <center>
+        <TableView fx:id="tablaDetalles">
+
+            <columns>
+                <TableColumn fx:id="colProducto" text="Producto" prefWidth="150"/>
+                <TableColumn fx:id="colTipo" text="Tipo" prefWidth="120"/>
+                <TableColumn fx:id="colCantidad" text="Cantidad" prefWidth="100"/>
+                <TableColumn fx:id="colPrecio" text="Precio" prefWidth="100"/>
+            </columns>
+
+        </TableView>
+    </center>
+
+</BorderPane>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controllers.UsuariosController">
+
+    <top>
+        <ToolBar>
+            <Button text="Nuevo Usuario" onAction="#onNuevo"/>
+            <Button text="Editar" onAction="#onEditar"/>
+            <Button text="Eliminar" onAction="#onEliminar"/>
+        </ToolBar>
+    </top>
+
+    <center>
+        <TableView fx:id="tablaUsuarios">
+            <columns>
+                <TableColumn fx:id="colId" text="ID"/>
+                <TableColumn fx:id="colNombre" text="Nombre"/>
+                <TableColumn fx:id="colRol" text="Rol"/>
+            </columns>
+        </TableView>
+    </center>
+
+</BorderPane>

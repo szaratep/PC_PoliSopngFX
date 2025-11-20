@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<VBox xmlns="http://javafx.com/javafx/8"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="controllers.ProveedorFormController"
+      spacing="10"
+      alignment="CENTER"
+      prefWidth="300"
+      prefHeight="180">
+
+    <Label text="Formulario Proveedor"/>
+
+    <TextField fx:id="txtNombre" promptText="Nombre"/>
+    <TextField fx:id="txtEmail" promptText="Correo"/>
+
+    <HBox spacing="10">
+        <Button text="Guardar" onAction="#onGuardar"/>
+        <Button text="Cancelar" onAction="#onCancelar"/>
+    </HBox>
+
+</VBox>

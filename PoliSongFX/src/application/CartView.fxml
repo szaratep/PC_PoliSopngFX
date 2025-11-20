@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="567.0" prefWidth="620.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.CartController">
+
+    <top>
+        <Label style="-fx-font-size: 18px; -fx-padding: 10;" text="Carrito de Compras" />
+    </top>
+
+    <center>
+        <HBox alignment="CENTER" spacing="20" BorderPane.alignment="CENTER">
+            <VBox spacing="10">
+
+                <Label text="Productos Disponibles" />
+
+                <TableView fx:id="tblProductos" prefWidth="300">
+                    <columns>
+                        <TableColumn fx:id="colNombreProd" prefWidth="150" text="Producto" />
+                        <TableColumn fx:id="colPrecioProd" prefWidth="100" text="Precio" />
+                    </columns>
+                </TableView>
+
+                <Button onAction="#agregarAlCarrito" text="Agregar al Carrito" />
+
+            </VBox>
+
+            <VBox spacing="10">
+
+                <Label text="Carrito" />
+
+                <TableView fx:id="tblCarrito" prefWidth="300">
+                    <columns>
+                        <TableColumn fx:id="colNombreCar" prefWidth="150" text="Producto" />
+                        <TableColumn fx:id="colPrecioCar" prefWidth="100" text="Precio" />
+                    </columns>
+                </TableView>
+
+                <HBox spacing="10">
+                    <Button onAction="#eliminarDelCarrito" text="Eliminar Seleccionado" />
+                    <Button onAction="#finalizarCompra" text="Finalizar Compra" />
+                </HBox>
+
+            </VBox>
+        </HBox>
+    </center>
+
+    <bottom>
+        <Button onAction="#volverMenu" text="Volver al Menú" BorderPane.alignment="CENTER" />
+    </bottom>
+
+</BorderPane>
