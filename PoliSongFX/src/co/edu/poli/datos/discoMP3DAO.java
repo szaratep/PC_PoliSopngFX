@@ -2,6 +2,8 @@ package co.edu.poli.datos;
 
 import co.edu.poli.model.discoMP3;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * DAO para la gestión de la tabla discomp3 en la base de datos.
@@ -64,6 +66,34 @@ public class discoMP3DAO {
 
         return mp3;
     }
+    
+    public List<discoMP3> listarDiscosMp3() {
+        String sql = "SELECT * FROM discomp3";
+        List<discoMP3> discos = new ArrayList<>();
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                discoMP3 mp3 = new discoMP3(
+                        rs.getInt("id_MP3"),
+                        rs.getString("nombre"),
+                        rs.getDate("fecha_salida"),
+                        null // las canciones se gestionan en otro DAO
+                );
+                discos.add(mp3);
+            }
+
+            System.out.println("discoMP3DAO -> listarDiscosMp3: Se encontraron " + discos.size() + " discos MP3");
+
+        } catch (SQLException e) {
+            System.out.println("discoMP3DAO -> listarDiscosMp3: Error al listar discos MP3");
+            System.out.println("Detalles: " + e.getMessage());
+        }
+
+        return discos;
+    }
 
     /**
      * Actualizar un disco MP3
@@ -115,4 +145,5 @@ public class discoMP3DAO {
             System.out.println("Detalles: " + e.getMessage());
         }
     }
+
 }

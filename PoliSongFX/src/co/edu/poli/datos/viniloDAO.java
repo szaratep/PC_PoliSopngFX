@@ -2,6 +2,8 @@ package co.edu.poli.datos;
 
 import co.edu.poli.model.vinilo;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * DAO (Data Access Object) para la entidad {@link vinilo}.
@@ -80,6 +82,37 @@ public class viniloDAO {
         }
 
         return v;
+    }
+    
+    public List<vinilo> listarVinilos() {
+        String sql = "SELECT * FROM vinilo";
+        List<vinilo> vinilos = new ArrayList<>();
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                vinilo v = new vinilo(
+                        rs.getInt("id_vinilo"),
+                        rs.getString("nombre"),
+                        rs.getString("artista"),
+                        rs.getInt("anio"),
+                        rs.getDouble("precio"),
+                        rs.getInt("inventario"),
+                        null // las canciones se gestionan en otro DAO
+                );
+                vinilos.add(v);
+            }
+
+            System.out.println("viniloDAO -> listarVinilos: Se encontraron " + vinilos.size() + " vinilos");
+
+        } catch (SQLException e) {
+            System.out.println("viniloDAO -> listarVinilos: Error al listar vinilos");
+            System.out.println("Detalles: " + e.getMessage());
+        }
+
+        return vinilos;
     }
 
     /**
