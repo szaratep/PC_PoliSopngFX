@@ -12,8 +12,8 @@ import java.util.List;
  */
 public class playListManager {
 
-    private final playListDAO playListDao;
-    private final playlist_cancionDAO playlistCancionDao;
+    public final playListDAO playListDao;
+    public final playlist_cancionDAO playlistCancionDao;
 
     /**
      * Constructor: inicializa los DAOs.
