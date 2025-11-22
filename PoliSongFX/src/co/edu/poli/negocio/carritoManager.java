@@ -1,5 +1,8 @@
 package co.edu.poli.negocio;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import co.edu.poli.datos.*;
 import co.edu.poli.model.*;
 
@@ -107,4 +110,13 @@ public class carritoManager {
         carritoDao.deleteCarrito(idCarrito);
         System.out.println("carritoManager -> eliminarCarrito: Carrito eliminado (ID: " + idCarrito + ")");
     }
+    
+    public List<carritoItem> listarItems(int idUsuario) {
+        carrito c = carritoDao.readCarrito(idUsuario); // asumimos que el id del carrito = idUsuario
+        if (c == null) return new ArrayList<>();
+        
+        // Aquí necesitas un método en carritoItemDAO para listar items por carrito
+        return itemDao.listarItemsPorCarrito(c.getId_carrito());
+    }
+
 }

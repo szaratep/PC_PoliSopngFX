@@ -45,20 +45,15 @@ public class MainPageController implements Initializable {
 
     private final viniloDAO viniloDao = new viniloDAO();
     private final discoMP3DAO discomp3Dao = new discoMP3DAO();
+    private final carritoManager manager = new carritoManager();
 
-    // ======================================================
-    //                    INICIALIZAR UI
-    // ======================================================
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         configurarColumnas();
         cargarProductos();
-        actualizarBotonLogin(); // ← cambia el texto del botón
+        actualizarBotonLogin();
     }
 
-    // ======================================================
-    //           CONFIGURACIÓN DE TABLA DE PRODUCTOS
-    // ======================================================
     private void configurarColumnas() {
         colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
         colTipo.setCellValueFactory(new PropertyValueFactory<>("tipo"));
@@ -81,13 +76,8 @@ public class MainPageController implements Initializable {
         tablaProductos.setItems(productos);
     }
 
-    // ======================================================
-    //                ACTUALIZAR BOTÓN LOGIN
-    // ======================================================
     private void actualizarBotonLogin() {
-
         if (Session.haySesion()) {
-
             String rol = Session.getRolActual();
             Object obj = Session.getUsuarioActual();
 
@@ -96,12 +86,10 @@ public class MainPageController implements Initializable {
                     usuario u = (usuario) obj;
                     btnLogin.setText("Hola, " + u.getNombre());
                     break;
-
                 case "proveedor":
                     proveedor p = (proveedor) obj;
                     btnLogin.setText("Proveedor: " + p.getNombre());
                     break;
-
                 case "admin":
                     administrador a = (administrador) obj;
                     btnLogin.setText("Admin: " + a.getNombre());
@@ -113,9 +101,6 @@ public class MainPageController implements Initializable {
         }
     }
 
-    // ======================================================
-    //                  ABRIR VENTANAS
-    // ======================================================
     private void abrirVentana(String ruta, Node source) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(ruta));
@@ -126,7 +111,7 @@ public class MainPageController implements Initializable {
             stage.setScene(new Scene(root));
             stage.show();
 
-            // ❌ cerrar ventana actual
+            // cerrar ventana actual
             Stage actual = (Stage) source.getScene().getWindow();
             actual.close();
 
@@ -144,9 +129,6 @@ public class MainPageController implements Initializable {
         abrirVentana("/co/edu/poli/view/CarritoView.fxml", source);
     }
 
-    // ======================================================
-    //                VALIDACIÓN DE SESIÓN
-    // ======================================================
     private boolean validarSesion(Node source) {
         if (!Session.haySesion()) {
             System.out.println("No hay sesión activa. Abriendo login...");
@@ -156,13 +138,27 @@ public class MainPageController implements Initializable {
         return true;
     }
 
-    // ======================================================
-    //                       BOTONES
-    // ======================================================
-
     @FXML
     private void onLogin(javafx.event.ActionEvent event) {
-        abrirLogin((Node) event.getSource());
+        Node source = (Node) event.getSource();
+
+        if (!Session.haySesion()) {
+            abrirLogin(source);
+        } else {
+            String rol = Session.getRolActual();
+
+            switch (rol) {
+                case "usuario":
+                    abrirVentana("/co/edu/poli/view/UserMenuView.fxml", source);
+                    break;
+                case "proveedor":
+                    abrirVentana("/co/edu/poli/view/ProveedorMenuView.fxml", source);
+                    break;
+                case "admin":
+                    abrirVentana("/co/edu/poli/view/AdministradorMenuView.fxml", source);
+                    break;
+            }
+        }
     }
 
     @FXML
@@ -172,11 +168,13 @@ public class MainPageController implements Initializable {
 
     @FXML
     private void onAgregarCarrito(javafx.event.ActionEvent event) {
-
         if (!validarSesion((Node) event.getSource())) return;
 
         usuario user = (usuario) Session.getUsuarioActual();
-        int idCarrito = user.getId_usuario(); 
+        int idCarrito = user.getId_usuario(); // usamos id_usuario como idCarrito
+
+        // Crear carrito si no existe
+        manager.crearCarrito(idCarrito, user.getId_usuario());
 
         Producto seleccionado = tablaProductos.getSelectionModel().getSelectedItem();
 
@@ -185,10 +183,7 @@ public class MainPageController implements Initializable {
             return;
         }
 
-        carritoManager manager = new carritoManager();
-
         try {
-
             if (seleccionado.getTipo().equals("Vinilo")) {
                 for (vinilo v : viniloDao.listarVinilos()) {
                     if (v.getNombre().equals(seleccionado.getNombre())) {
@@ -197,8 +192,7 @@ public class MainPageController implements Initializable {
                         break;
                     }
                 }
-            }
-            else if (seleccionado.getTipo().equals("MP3")) {
+            } else if (seleccionado.getTipo().equals("MP3")) {
                 for (discoMP3 m : discomp3Dao.listarDiscosMp3()) {
                     if (m.getNombre().equals(seleccionado.getNombre())) {
                         manager.agregarMP3(0, idCarrito, m.getId_MP3(), 1);
@@ -207,7 +201,6 @@ public class MainPageController implements Initializable {
                     }
                 }
             }
-
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Error al agregar al carrito: " + e.getMessage());
@@ -225,9 +218,6 @@ public class MainPageController implements Initializable {
         cargarProductos();
     }
 
-    // ======================================================
-    //                 CLASE INTERNA PRODUCTO
-    // ======================================================
     public static class Producto {
         private final String nombre;
         private final String tipo;

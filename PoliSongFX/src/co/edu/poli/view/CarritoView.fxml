@@ -1,58 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="co.edu.poli.controller.CarritoController">
-
-    <top>
-        <HBox spacing="10">
-            <padding>
-                <Insets top="10" right="10" bottom="10" left="10"/>
-            </padding>
-
-            <Label text="ID Carrito:"/>
-            <TextField fx:id="txtIdCarrito" prefWidth="80"/>
-            <Button text="Cargar" onAction="#onCargarCarrito"/>
-        </HBox>
-    </top>
+<BorderPane xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.edu.poli.controller.CarritoController">
 
     <center>
         <VBox spacing="12">
             <padding>
-                <Insets top="10" right="10" bottom="10" left="10"/>
+                <Insets bottom="10" left="10" right="10" top="10" />
             </padding>
 
-            <Label text="Items del Carrito" style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
+            <Label style="-fx-font-size: 14px; -fx-font-weight: bold;" text="Items del Carrito" />
 
             <TableView fx:id="tablaCarrito" prefHeight="350">
                 <columns>
-                    <TableColumn fx:id="colIdItem" text="ID Item" prefWidth="80"/>
-                    <TableColumn fx:id="colTipoProducto" text="Tipo" prefWidth="100"/>
-                    <TableColumn fx:id="colIdCancion" text="ID Canción" prefWidth="100"/>
-                    <TableColumn fx:id="colIdVinilo" text="ID Vinilo" prefWidth="100"/>
-                    <TableColumn fx:id="colIdMp3" text="ID MP3" prefWidth="100"/>
-                    <TableColumn fx:id="colCantidad" text="Cantidad" prefWidth="80"/>
+                    <TableColumn fx:id="colIdItem" prefWidth="80" text="ID Item" />
+                    <TableColumn fx:id="colTipoProducto" prefWidth="100" text="Tipo" />
+                    <TableColumn fx:id="colIdCancion" prefWidth="100" text="ID Canción" />
+                    <TableColumn fx:id="colIdVinilo" prefWidth="100" text="ID Vinilo" />
+                    <TableColumn fx:id="colIdMp3" prefWidth="100" text="ID MP3" />
+                    <TableColumn fx:id="colCantidad" prefWidth="80" text="Cantidad" />
                 </columns>
             </TableView>
         </VBox>
     </center>
 
     <bottom>
-        <HBox spacing="12">
+        <HBox nodeOrientation="RIGHT_TO_LEFT" spacing="12">
             <padding>
-                <Insets top="10" right="10" bottom="10" left="10"/>
+                <Insets bottom="10" left="10" right="10" top="10" />
             </padding>
-
-            <Button text="Agregar Canción" onAction="#onAgregarCancion"/>
-            <Button text="Agregar Vinilo" onAction="#onAgregarVinilo"/>
-            <Button text="Agregar MP3" onAction="#onAgregarMp3"/>
-            <Button text="Actualizar Cantidad" onAction="#onActualizarCantidad"/>
-            <Button text="Eliminar Item" onAction="#onEliminarItem"/>
-            <Button text="Vaciar Carrito" onAction="#onVaciarCarrito"/>
+            <Button onAction="#onAgregarProducto" text="Agregar Producto" />
+            <Button onAction="#onActualizarCantidad" text="Actualizar Cantidad" />
+            <Button onAction="#onEliminarItem" text="Eliminar Item" />
+            <Button onAction="#onVaciarCarrito" text="Vaciar Carrito" />
         </HBox>
     </bottom>
 

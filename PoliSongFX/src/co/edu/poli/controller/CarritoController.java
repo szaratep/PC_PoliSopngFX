@@ -1,111 +1,113 @@
 package co.edu.poli.controller;
 
-import co.edu.poli.datos.carritoDAO;
-import co.edu.poli.datos.carritoItemDAO;
-import co.edu.poli.model.carrito;
-import co.edu.poli.model.carritoItem;
+import co.edu.poli.model.*;
+import co.edu.poli.negocio.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+
+import java.util.List;
 
 public class CarritoController {
 
-    @FXML private TextField txtCarritoId;
-    @FXML private TextField txtUsuarioId;
+    @FXML private TableView<ItemCarrito> tablaCarrito;
+    @FXML private TableColumn<ItemCarrito, Integer> colIdItem;
+    @FXML private TableColumn<ItemCarrito, String> colTipoProducto;
+    @FXML private TableColumn<ItemCarrito, Integer> colIdCancion;
+    @FXML private TableColumn<ItemCarrito, Integer> colIdVinilo;
+    @FXML private TableColumn<ItemCarrito, Integer> colIdMp3;
+    @FXML private TableColumn<ItemCarrito, Integer> colCantidad;
 
-    @FXML private TableView<carritoItem> tablaItems;
-    @FXML private TableColumn<carritoItem, Integer> colId;
-    @FXML private TableColumn<carritoItem, String> colTipo;
-    @FXML private TableColumn<carritoItem, Integer> colCantidad;
-
-    private carritoDAO carritoDAO = new carritoDAO();
-    private carritoItemDAO itemDAO = new carritoItemDAO();
-
-    private ObservableList<carritoItem> itemsObservable = FXCollections.observableArrayList();
-    private carrito carritoActual;
+    private carritoManager manager;
+    private ObservableList<ItemCarrito> itemsObservable;
 
     @FXML
     public void initialize() {
-        colId.setCellValueFactory(data -> new javafx.beans.property.SimpleIntegerProperty(data.getValue().getId_item()).asObject());
-        colTipo.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getTipo_producto()));
-        colCantidad.setCellValueFactory(data -> new javafx.beans.property.SimpleIntegerProperty(data.getValue().getCantidad()).asObject());
-
-        tablaItems.setItems(itemsObservable);
+        manager = new carritoManager();
+        configurarColumnas();
+        cargarCarrito();
     }
 
-    @FXML
-    private void onCargarCarrito() {
-        int id = Integer.parseInt(txtCarritoId.getText());
+    private void configurarColumnas() {
+        colIdItem.setCellValueFactory(new PropertyValueFactory<>("idItem"));
+        colTipoProducto.setCellValueFactory(new PropertyValueFactory<>("tipoProducto"));
+        colIdCancion.setCellValueFactory(new PropertyValueFactory<>("idCancion"));
+        colIdVinilo.setCellValueFactory(new PropertyValueFactory<>("idVinilo"));
+        colIdMp3.setCellValueFactory(new PropertyValueFactory<>("idMp3"));
+        colCantidad.setCellValueFactory(new PropertyValueFactory<>("cantidad"));
+    }
 
-        carritoActual = carritoDAO.readCarrito(id);
+    private void cargarCarrito() {
+        if (!Session.haySesion()) return;
 
-        if (carritoActual == null) {
-            alert("No existe un carrito con ese ID");
-            return;
+        usuario user = (usuario) Session.getUsuarioActual();
+        List<carritoItem> items = manager.listarItems(user.getId_usuario());
+
+        itemsObservable = FXCollections.observableArrayList();
+
+        for (carritoItem ci : items) {
+            itemsObservable.add(new ItemCarrito(
+                    ci.getId_item(),
+                    ci.getTipo_producto(),
+                    ci.getId_cancion(),
+                    ci.getId_vinilo(),
+                    ci.getId_mp3(),
+                    ci.getCantidad()
+            ));
         }
 
-        txtUsuarioId.setText(String.valueOf(carritoActual.getId_usuario()));
-
-        // Cargar items
-        itemsObservable.setAll(carritoActual.getItems());
+        tablaCarrito.setItems(itemsObservable);
     }
 
     @FXML
-    private void onAgregarItem() {
-        // Aqui debes abrir ventana modal para pedir datos.
-        // Ejemplo rápido:
-        carritoItem item = new carritoItem(
-                0, // id_item
-                carritoActual.getId_carrito(),
-                "vinilo",
-                null,
-                1,
-                null,
-                1
-        );
-
-        itemDAO.createItem(item);
-        refrescar();
+    void onActualizarCantidad(ActionEvent event) {
+        // Aquí se puede implementar la actualización de cantidad usando manager.actualizarItem(...)
     }
 
     @FXML
-    private void onEditarItem() {
-        carritoItem seleccionado = tablaItems.getSelectionModel().getSelectedItem();
+    void onAgregarProducto(ActionEvent event) {
+        // Se puede redirigir a la MainPage para agregar más productos
+    }
 
-        if (seleccionado == null) {
-            alert("Selecciona un item para editar");
-            return;
+    @FXML
+    void onEliminarItem(ActionEvent event) {
+        // Eliminar el item seleccionado usando manager.eliminarItem(...)
+    }
+
+    @FXML
+    void onVaciarCarrito(ActionEvent event) {
+        // Vaciar el carrito completo usando manager.eliminarCarrito(...)
+    }
+
+    // ======================================================
+    // Clase interna para mostrar los items en la tabla
+    // ======================================================
+    public static class ItemCarrito {
+        private final Integer idItem;
+        private final String tipoProducto;
+        private final Integer idCancion;
+        private final Integer idVinilo;
+        private final Integer idMp3;
+        private final Integer cantidad;
+
+        public ItemCarrito(Integer idItem, String tipoProducto, Integer idCancion, Integer idVinilo, Integer idMp3, Integer cantidad) {
+            this.idItem = idItem;
+            this.tipoProducto = tipoProducto;
+            this.idCancion = idCancion;
+            this.idVinilo = idVinilo;
+            this.idMp3 = idMp3;
+            this.cantidad = cantidad;
         }
 
-        seleccionado.setCantidad(seleccionado.getCantidad() + 1);
-        itemDAO.updateItem(seleccionado);
-
-        refrescar();
-    }
-
-    @FXML
-    private void onEliminarItem() {
-        carritoItem seleccionado = tablaItems.getSelectionModel().getSelectedItem();
-
-        if (seleccionado == null) {
-            alert("Selecciona un item para eliminar");
-            return;
-        }
-
-        itemDAO.deleteItem(seleccionado.getId_item());
-        refrescar();
-    }
-
-    private void refrescar() {
-        carritoActual = carritoDAO.readCarrito(carritoActual.getId_carrito());
-        itemsObservable.setAll(carritoActual.getItems());
-    }
-
-    private void alert(String msg) {
-        Alert a = new Alert(Alert.AlertType.INFORMATION);
-        a.setHeaderText(null);
-        a.setContentText(msg);
-        a.showAndWait();
+        public Integer getIdItem() { return idItem; }
+        public String getTipoProducto() { return tipoProducto; }
+        public Integer getIdCancion() { return idCancion; }
+        public Integer getIdVinilo() { return idVinilo; }
+        public Integer getIdMp3() { return idMp3; }
+        public Integer getCantidad() { return cantidad; }
     }
 }

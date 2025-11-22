@@ -2,6 +2,8 @@ package co.edu.poli.datos;
 
 import co.edu.poli.model.carritoItem;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class carritoItemDAO {
 
@@ -110,4 +112,32 @@ public class carritoItemDAO {
             System.out.println("Detalles: " + e.getMessage());
         }
     }
+    
+    public List<carritoItem> listarItemsPorCarrito(int idCarrito) {
+        List<carritoItem> items = new ArrayList<>();
+        String sql = "SELECT * FROM carrito_item WHERE id_carrito = ?";
+        
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, idCarrito);
+            ResultSet rs = stmt.executeQuery();
+            
+            while (rs.next()) {
+                items.add(new carritoItem(
+                    rs.getInt("id_item"),
+                    rs.getInt("id_carrito"),
+                    rs.getString("tipo_producto"),
+                    (Integer) rs.getObject("id_cancion"),
+                    (Integer) rs.getObject("id_vinilo"),
+                    (Integer) rs.getObject("id_mp3"),
+                    rs.getInt("cantidad")
+                ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return items;
+    }
+
 }
