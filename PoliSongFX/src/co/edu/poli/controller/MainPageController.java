@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
@@ -69,30 +70,26 @@ public class MainPageController implements Initializable {
 
         tablaProductos.setItems(productos);
     }
-    // ---------------------------
-    // BOTONES → los dejas vacíos
-    // ---------------------------
 
+    // ---------------------------
+    // BOTÓN LOGIN → cierra mainPage
+    // ---------------------------
     @FXML
-    private void onLogin() {
-        try {
-        	FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/edu/poli/view/LoginView.fxml"));
-            Parent root = loader.load();
-            Stage stage = new Stage();
-            stage.setTitle("Login");
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Error al abrir LoginView.fxml: " + e.getMessage());
-        }
+    private void onLogin(javafx.event.ActionEvent event) {
+        abrirVentanaYcerrarActual("/co/edu/poli/view/LoginView.fxml", "Login", event);
     }
 
+    // ---------------------------
+    // BOTÓN SALIR
+    // ---------------------------
     @FXML
     private void onSalir() {
-        Platform.exit(); // Termina la aplicación JavaFX
+        Platform.exit();
     }
 
+    // ---------------------------
+    // BOTÓN AGREGAR AL CARRITO
+    // ---------------------------
     @FXML
     private void onAgregarCarrito() {
         Producto seleccionado = tablaProductos.getSelectionModel().getSelectedItem();
@@ -130,10 +127,35 @@ public class MainPageController implements Initializable {
         }
     }
 
-
+    // ---------------------------
+    // BOTÓN REFRESCAR
+    // ---------------------------
     @FXML
     private void onRefrescar() {
-        cargarProductos(); // vuelve a cargar la tabla
+        cargarProductos();
+    }
+
+    // ---------------------------
+    // MÉTODO UTIL PARA CAMBIO DE VENTANA
+    // ---------------------------
+    private void abrirVentanaYcerrarActual(String rutaFXML, String titulo, javafx.event.ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(rutaFXML));
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setTitle(titulo);
+            stage.setScene(new Scene(root));
+            stage.show();
+
+            // Cierra la ventana actual (mainPage)
+            Stage ventanaActual = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            ventanaActual.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Error al abrir ventana: " + rutaFXML + " -> " + e.getMessage());
+        }
     }
 
     // ---------------------------
@@ -150,16 +172,8 @@ public class MainPageController implements Initializable {
             this.precio = precio;
         }
 
-        public String getNombre() {
-            return nombre;
-        }
-
-        public String getTipo() {
-            return tipo;
-        }
-
-        public Double getPrecio() {
-            return precio;
-        }
+        public String getNombre() { return nombre; }
+        public String getTipo() { return tipo; }
+        public Double getPrecio() { return precio; }
     }
 }

@@ -6,6 +6,7 @@ import co.edu.poli.negocio.usuarioManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -14,7 +15,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-public class RegisterViewController {
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class RegisterViewController implements Initializable {
 
     @FXML
     private Button AceptarRegistro;
@@ -43,12 +47,21 @@ public class RegisterViewController {
     private final usuarioManager um = new usuarioManager();
     private final proveedorManager pm = new proveedorManager();
 
+    // ============================
+    //   Inicializar ChoiceBox
+    // ============================
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        Selecciona.getItems().addAll("Comprador", "Proveedor");
+        Selecciona.setValue("Comprador"); // valor por defecto
+    }
+
     @FXML
     void PresionarAceptar(ActionEvent event) {
         String nombre = NombreRegistro.getText().trim();
         String correoStr = CorreoRegistro.getText().trim();
         String contrasena = ContraseñaRegistro.getText().trim();
-        String tipoUsuario = Selecciona.getValue(); // "Comprador" o "Proveedor"
+        String tipoUsuario = Selecciona.getValue();
 
         if (nombre.isEmpty() || correoStr.isEmpty() || contrasena.isEmpty() || tipoUsuario == null) {
             Label.setText("Todos los campos son obligatorios");
@@ -88,17 +101,12 @@ public class RegisterViewController {
         cerrarYVolverMenu();
     }
 
-    /**
-     * Método que cierra la ventana actual y abre MainPage.fxml
-     */
     private void cerrarYVolverMenu() {
         try {
-            // Cerrar la ventana actual
             Stage stageActual = (Stage) CancelarRegistro.getScene().getWindow();
             stageActual.close();
 
-            // Abrir MainPage.fxml
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/edu/poli/view/MainPage.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/application/MainPage.fxml"));
             Parent root = loader.load();
             Stage stage = new Stage();
             stage.setTitle("Menu Principal");
@@ -110,5 +118,4 @@ public class RegisterViewController {
             Label.setText("Error al abrir MainPage.fxml: " + e.getMessage());
         }
     }
-
 }
