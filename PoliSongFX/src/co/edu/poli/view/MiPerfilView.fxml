@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="co.edu.poli.controller.MiPerfilController"
+            prefWidth="500" prefHeight="300">
+
+    <children>
+
+        <VBox spacing="15" layoutX="20" layoutY="20" prefWidth="460">
+            <children>
+
+                <Label text="Mi Perfil" style="-fx-font-size: 26px; -fx-font-weight: bold;" />
+
+                <HBox spacing="10">
+                    <Label text="ID Usuario:" />
+                    <Label fx:id="lblIdUsuario" text="---" />
+                </HBox>
+
+                <HBox spacing="10">
+                    <Label text="Nombre:" />
+                    <Label fx:id="lblNombre" text="---" />
+                </HBox>
+
+                <HBox spacing="10">
+                    <Label text="Correo:" />
+                    <Label fx:id="lblCorreo" text="---" />
+                </HBox>
+
+                <HBox spacing="10">
+                    <Label text="Contraseña:" />
+                    <Label fx:id="lblContrasena" text="---" />
+                </HBox>
+
+                <HBox spacing="20" alignment="CENTER">
+                    <Button fx:id="btnEditar" text="Cambiar Información" onAction="#abrirEditarPerfil" />
+                    <Button fx:id="btnVolver" text="Volver" onAction="#volverMenu" />
+                </HBox>
+
+            </children>
+            <padding>
+                <Insets top="20" left="20" right="20" bottom="20"/>
+            </padding>
+        </VBox>
+
+    </children>
+
+</AnchorPane>

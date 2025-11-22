@@ -6,7 +6,7 @@
 <AnchorPane prefHeight="350" prefWidth="400"
             xmlns="http://javafx.com/javafx/8"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="controllers.RegisterController">
+            fx:controller="co.edu.poli.controller.RegisterViewController">
 
     <children>
         <VBox alignment="CENTER"

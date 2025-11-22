@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="co.edu.poli.controller.PlaylistController">
+
+    <top>
+        <HBox spacing="10">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+
+            <Label text="ID Playlist:"/>
+            <TextField fx:id="txtIdPlaylist" prefWidth="80"/>
+            <Button text="Cargar" onAction="#onCargarPlaylist"/>
+        </HBox>
+    </top>
+
+    <center>
+        <VBox spacing="10">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+
+            <HBox spacing="10">
+                <Label text="Nombre:"/>
+                <TextField fx:id="txtNombre" prefWidth="150"/>
+
+                <Label text="Usuario ID:"/>
+                <TextField fx:id="txtUsuarioId" prefWidth="80"/>
+
+                <Label text="Pública:"/>
+                <CheckBox fx:id="chkPublica"/>
+            </HBox>
+
+            <Label text="Canciones en la Playlist:"/>
+
+            <TableView fx:id="tablaCanciones" prefHeight="300">
+                <columns>
+                    <TableColumn fx:id="colIdCancion" text="ID Canción" prefWidth="150"/>
+                </columns>
+            </TableView>
+
+        </VBox>
+    </center>
+
+    <bottom>
+        <HBox spacing="12">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+
+            <Button text="Crear Playlist" onAction="#onCrearPlaylist"/>
+            <Button text="Actualizar Playlist" onAction="#onActualizarPlaylist"/>
+            <Button text="Agregar Canción" onAction="#onAgregarCancion"/>
+            <Button text="Eliminar Canción" onAction="#onEliminarCancion"/>
+            <Button text="Eliminar Playlist" onAction="#onEliminarPlaylist"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>

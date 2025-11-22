@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="co.edu.poli.controller.CarritoController">
+
+    <top>
+        <HBox spacing="10">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+
+            <Label text="ID Carrito:"/>
+            <TextField fx:id="txtIdCarrito" prefWidth="80"/>
+            <Button text="Cargar" onAction="#onCargarCarrito"/>
+        </HBox>
+    </top>
+
+    <center>
+        <VBox spacing="12">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+
+            <Label text="Items del Carrito" style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
+
+            <TableView fx:id="tablaCarrito" prefHeight="350">
+                <columns>
+                    <TableColumn fx:id="colIdItem" text="ID Item" prefWidth="80"/>
+                    <TableColumn fx:id="colTipoProducto" text="Tipo" prefWidth="100"/>
+                    <TableColumn fx:id="colIdCancion" text="ID Canción" prefWidth="100"/>
+                    <TableColumn fx:id="colIdVinilo" text="ID Vinilo" prefWidth="100"/>
+                    <TableColumn fx:id="colIdMp3" text="ID MP3" prefWidth="100"/>
+                    <TableColumn fx:id="colCantidad" text="Cantidad" prefWidth="80"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </center>
+
+    <bottom>
+        <HBox spacing="12">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+
+            <Button text="Agregar Canción" onAction="#onAgregarCancion"/>
+            <Button text="Agregar Vinilo" onAction="#onAgregarVinilo"/>
+            <Button text="Agregar MP3" onAction="#onAgregarMp3"/>
+            <Button text="Actualizar Cantidad" onAction="#onActualizarCantidad"/>
+            <Button text="Eliminar Item" onAction="#onEliminarItem"/>
+            <Button text="Vaciar Carrito" onAction="#onVaciarCarrito"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>

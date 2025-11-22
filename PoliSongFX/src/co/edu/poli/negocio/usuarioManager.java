@@ -18,6 +18,9 @@ public class usuarioManager {
         this.correoDao = new correoDAO();
     }
 
+    public correoDAO getCorreoDao() {
+        return this.correoDao;
+    }
     /**
      * Registra un nuevo usuario.
      * Si el correo no existe en la base de datos, se crea automáticamente.

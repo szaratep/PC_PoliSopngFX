@@ -8,21 +8,20 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="453.0" prefWidth="423.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="376.0" prefWidth="423.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.edu.poli.controller.RegisterViewController">
    <children>
       <Text layoutX="97.0" layoutY="61.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Registro De Usuario">
          <font>
             <Font size="22.0" />
          </font>
       </Text>
-      <TextField fx:id="NombreRegistro" layoutX="45.0" layoutY="105.0" promptText="Nombre" />
-      <TextField fx:id="CorreoRegistro" layoutX="45.0" layoutY="147.0" promptText="Correo" />
-      <TextField fx:id="ContraseñaRegistro" layoutX="45.0" layoutY="200.0" promptText="Contraseña" />
-      <ChoiceBox fx:id="Selecciona" layoutX="44.0" layoutY="250.0" prefWidth="150.0" />
-      <Label fx:id="Label" layoutX="52.0" layoutY="304.0" prefHeight="17.0" prefWidth="133.0" />
-      <Button fx:id="AceptarRegistro" layoutX="46.0" layoutY="347.0" mnemonicParsing="false" onAction="#PresionarAceptar" prefHeight="25.0" prefWidth="102.0" text="Aceptar" />
-      <Button fx:id="VolverRegristro" layoutX="271.0" layoutY="347.0" mnemonicParsing="false" onAction="#PresionarVolverAlMenu" prefHeight="25.0" prefWidth="102.0" text="Volver al Menu" />
-      <Button fx:id="CancelarRegistro" layoutX="185.0" layoutY="392.0" mnemonicParsing="false" onAction="#PresionarCancelar" text="Cancelar" />
+      <TextField fx:id="NombreRegistro" layoutX="44.0" layoutY="87.0" prefHeight="25.0" prefWidth="336.0" promptText="Nombre" />
+      <TextField fx:id="CorreoRegistro" layoutX="44.0" layoutY="128.0" prefHeight="25.0" prefWidth="336.0" promptText="Correo" />
+      <TextField fx:id="ContraseñaRegistro" layoutX="44.0" layoutY="165.0" prefHeight="25.0" prefWidth="336.0" promptText="Contraseña" />
+      <ChoiceBox fx:id="Selecciona" layoutX="44.0" layoutY="202.0" prefHeight="25.0" prefWidth="336.0" />
+      <Label fx:id="Label" layoutX="44.0" layoutY="240.0" prefHeight="38.0" prefWidth="336.0" />
+      <Button fx:id="AceptarRegistro" layoutX="46.0" layoutY="290.0" mnemonicParsing="false" onAction="#PresionarAceptar" prefHeight="25.0" prefWidth="102.0" text="Aceptar" />
+      <Button fx:id="VolverRegristro" layoutX="291.0" layoutY="290.0" mnemonicParsing="false" onAction="#PresionarVolverAlMenu" prefHeight="25.0" prefWidth="102.0" text="Volver al Menu" />
+      <Button fx:id="CancelarRegistro" layoutX="290.0" layoutY="326.0" mnemonicParsing="false" onAction="#PresionarCancelar" prefHeight="25.0" prefWidth="102.0" text="Cancelar" />
    </children>
 </Pane>
