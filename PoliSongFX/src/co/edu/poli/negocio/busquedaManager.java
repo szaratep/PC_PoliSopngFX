@@ -1,5 +1,10 @@
 package co.edu.poli.negocio;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import co.edu.poli.datos.*;
 import co.edu.poli.model.*;
 
@@ -122,5 +127,112 @@ public class busquedaManager {
         } catch (Exception e) {
             System.out.println("Error al buscar playlists públicas: " + e.getMessage());
         }
+    }
+    
+    // ----------------------------------------------------------------
+    // MÉTODOS DE BÚSQUEDA POR CORREO (NUEVOS)
+    // ----------------------------------------------------------------
+
+    /**
+     * Busca un usuario por su dirección de correo electrónico.
+     * @param correo El correo a buscar.
+     * @return El objeto usuario encontrado, o null si no existe.
+     */
+    public usuario buscarUsuarioPorCorreo(String correo) {
+        String sql = """
+            SELECT u.id_usuario, u.nombre, u.contrasena, c.correo
+            FROM usuario u
+            LEFT JOIN correo c ON u.correo_id = c.id_correo
+            WHERE c.correo = ?
+        """;
+        usuario u = null;
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, correo);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                u = new usuario(
+                    rs.getInt("id_usuario"),
+                    rs.getString("nombre"),
+                    rs.getString("correo"),
+                    rs.getString("contrasena")
+                );
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al buscar usuario por correo: " + e.getMessage());
+        }
+        return u;
+    }
+
+    /**
+     * Busca un proveedor por su dirección de correo electrónico.
+     * @param correo El correo a buscar.
+     * @return El objeto proveedor encontrado, o null si no existe.
+     */
+    public proveedor buscarProveedorPorCorreo(String correo) {
+        String sql = """
+            SELECT p.id_proveedor, p.nombre, p.contrasena, p.calificaciones, c.correo
+            FROM proveedor p
+            LEFT JOIN correo c ON p.correo_id = c.id_correo
+            WHERE c.correo = ?
+        """;
+        proveedor p = null;
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, correo);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                p = new proveedor(
+                    rs.getInt("id_proveedor"),
+                    rs.getString("nombre"),
+                    rs.getString("correo"),
+                    rs.getString("contrasena"),
+                    rs.getInt("calificaciones")
+                );
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al buscar proveedor por correo: " + e.getMessage());
+        }
+        return p;
+    }
+
+    /**
+     * Busca un administrador por su dirección de correo electrónico.
+     * @param correo El correo a buscar.
+     * @return El objeto administrador encontrado, o null si no existe.
+     */
+    public administrador buscarAdminPorCorreo(String correo) {
+         String sql = """
+            SELECT a.id_admin, a.nombre, a.contrasena, c.correo
+            FROM administrador a
+            LEFT JOIN correo c ON a.correo_id = c.id_correo
+            WHERE c.correo = ?
+        """;
+        administrador admin = null;
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, correo);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                admin = new administrador(
+                        rs.getInt("id_admin"),
+                        rs.getString("nombre"),
+                        rs.getString("correo"),
+                        rs.getString("contrasena")
+                );
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al buscar administrador por correo: " + e.getMessage());
+        }
+        return admin;
     }
 }

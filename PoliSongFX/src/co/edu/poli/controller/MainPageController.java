@@ -8,14 +8,16 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import javafx.stage.Stage;
+import javafx.scene.Node;
+
 import co.edu.poli.datos.*;
 import co.edu.poli.model.*;
 import co.edu.poli.negocio.*;
@@ -38,15 +40,25 @@ public class MainPageController implements Initializable {
     @FXML
     private TableColumn<Producto, Double> colPrecio;
 
+    @FXML
+    private Button btnLogin;
+
     private final viniloDAO viniloDao = new viniloDAO();
     private final discoMP3DAO discomp3Dao = new discoMP3DAO();
 
+    // ======================================================
+    //                    INICIALIZAR UI
+    // ======================================================
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         configurarColumnas();
         cargarProductos();
+        actualizarBotonLogin(); // ← cambia el texto del botón
     }
 
+    // ======================================================
+    //           CONFIGURACIÓN DE TABLA DE PRODUCTOS
+    // ======================================================
     private void configurarColumnas() {
         colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
         colTipo.setCellValueFactory(new PropertyValueFactory<>("tipo"));
@@ -56,13 +68,11 @@ public class MainPageController implements Initializable {
     private void cargarProductos() {
         ObservableList<Producto> productos = FXCollections.observableArrayList();
 
-        // Convertir vinilos a Producto
         List<vinilo> vinilos = viniloDao.listarVinilos();
         for (vinilo v : vinilos) {
             productos.add(new Producto(v.getNombre(), "Vinilo", v.getPrecio()));
         }
 
-        // Convertir discos MP3 a Producto (precio = 0)
         List<discoMP3> mp3s = discomp3Dao.listarDiscosMp3();
         for (discoMP3 m : mp3s) {
             productos.add(new Producto(m.getNombre(), "MP3", 0.0));
@@ -71,96 +81,153 @@ public class MainPageController implements Initializable {
         tablaProductos.setItems(productos);
     }
 
-    // ---------------------------
-    // BOTÓN LOGIN → cierra mainPage
-    // ---------------------------
-    @FXML
-    private void onLogin(javafx.event.ActionEvent event) {
-        abrirVentanaYcerrarActual("/co/edu/poli/view/LoginView.fxml", "Login", event);
+    // ======================================================
+    //                ACTUALIZAR BOTÓN LOGIN
+    // ======================================================
+    private void actualizarBotonLogin() {
+
+        if (Session.haySesion()) {
+
+            String rol = Session.getRolActual();
+            Object obj = Session.getUsuarioActual();
+
+            switch (rol) {
+                case "usuario":
+                    usuario u = (usuario) obj;
+                    btnLogin.setText("Hola, " + u.getNombre());
+                    break;
+
+                case "proveedor":
+                    proveedor p = (proveedor) obj;
+                    btnLogin.setText("Proveedor: " + p.getNombre());
+                    break;
+
+                case "admin":
+                    administrador a = (administrador) obj;
+                    btnLogin.setText("Admin: " + a.getNombre());
+                    break;
+            }
+
+        } else {
+            btnLogin.setText("Iniciar Sesión / Registrar");
+        }
     }
 
-    // ---------------------------
-    // BOTÓN SALIR
-    // ---------------------------
+    // ======================================================
+    //                  ABRIR VENTANAS
+    // ======================================================
+    private void abrirVentana(String ruta, Node source) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(ruta));
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setTitle("PoliSong");
+            stage.setScene(new Scene(root));
+            stage.show();
+
+            // ❌ cerrar ventana actual
+            Stage actual = (Stage) source.getScene().getWindow();
+            actual.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Error al abrir ventana: " + ruta);
+        }
+    }
+
+    private void abrirLogin(Node source) {
+        abrirVentana("/co/edu/poli/view/LoginView.fxml", source);
+    }
+
+    private void abrirCarrito(Node source) {
+        abrirVentana("/co/edu/poli/view/CarritoView.fxml", source);
+    }
+
+    // ======================================================
+    //                VALIDACIÓN DE SESIÓN
+    // ======================================================
+    private boolean validarSesion(Node source) {
+        if (!Session.haySesion()) {
+            System.out.println("No hay sesión activa. Abriendo login...");
+            abrirLogin(source);
+            return false;
+        }
+        return true;
+    }
+
+    // ======================================================
+    //                       BOTONES
+    // ======================================================
+
+    @FXML
+    private void onLogin(javafx.event.ActionEvent event) {
+        abrirLogin((Node) event.getSource());
+    }
+
     @FXML
     private void onSalir() {
         Platform.exit();
     }
 
-    // ---------------------------
-    // BOTÓN AGREGAR AL CARRITO
-    // ---------------------------
     @FXML
-    private void onAgregarCarrito() {
+    private void onAgregarCarrito(javafx.event.ActionEvent event) {
+
+        if (!validarSesion((Node) event.getSource())) return;
+
+        usuario user = (usuario) Session.getUsuarioActual();
+        int idCarrito = user.getId_usuario(); 
+
         Producto seleccionado = tablaProductos.getSelectionModel().getSelectedItem();
+
         if (seleccionado == null) {
-            System.out.println("No se ha seleccionado ningún producto.");
+            System.out.println("No hay producto seleccionado.");
             return;
         }
 
-        int idCarrito = 1; // Aquí deberías usar el carrito del usuario actual
         carritoManager manager = new carritoManager();
 
         try {
+
             if (seleccionado.getTipo().equals("Vinilo")) {
-                List<vinilo> vinilos = viniloDao.listarVinilos();
-                for (vinilo v : vinilos) {
+                for (vinilo v : viniloDao.listarVinilos()) {
                     if (v.getNombre().equals(seleccionado.getNombre())) {
                         manager.agregarVinilo(0, idCarrito, v.getId_vinilo(), 1);
-                        System.out.println("Vinilo agregado al carrito: " + v.getNombre());
-                        break;
-                    }
-                }
-            } else if (seleccionado.getTipo().equals("MP3")) {
-                List<discoMP3> mp3s = discomp3Dao.listarDiscosMp3();
-                for (discoMP3 m : mp3s) {
-                    if (m.getNombre().equals(seleccionado.getNombre())) {
-                        manager.agregarMP3(0, idCarrito, m.getId_MP3(), 1);
-                        System.out.println("MP3 agregado al carrito: " + m.getNombre());
+                        System.out.println("Vinilo agregado: " + v.getNombre());
                         break;
                     }
                 }
             }
+            else if (seleccionado.getTipo().equals("MP3")) {
+                for (discoMP3 m : discomp3Dao.listarDiscosMp3()) {
+                    if (m.getNombre().equals(seleccionado.getNombre())) {
+                        manager.agregarMP3(0, idCarrito, m.getId_MP3(), 1);
+                        System.out.println("MP3 agregado: " + m.getNombre());
+                        break;
+                    }
+                }
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Error al agregar producto al carrito: " + e.getMessage());
+            System.out.println("Error al agregar al carrito: " + e.getMessage());
         }
     }
 
-    // ---------------------------
-    // BOTÓN REFRESCAR
-    // ---------------------------
+    @FXML
+    private void onVerCarrito(javafx.event.ActionEvent event) {
+        if (!validarSesion((Node) event.getSource())) return;
+        abrirCarrito((Node) event.getSource());
+    }
+
     @FXML
     private void onRefrescar() {
         cargarProductos();
     }
 
-    // ---------------------------
-    // MÉTODO UTIL PARA CAMBIO DE VENTANA
-    // ---------------------------
-    private void abrirVentanaYcerrarActual(String rutaFXML, String titulo, javafx.event.ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(rutaFXML));
-            Parent root = loader.load();
-
-            Stage stage = new Stage();
-            stage.setTitle(titulo);
-            stage.setScene(new Scene(root));
-            stage.show();
-
-            // Cierra la ventana actual (mainPage)
-            Stage ventanaActual = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            ventanaActual.close();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Error al abrir ventana: " + rutaFXML + " -> " + e.getMessage());
-        }
-    }
-
-    // ---------------------------
-    // CLASE INTERNA Producto
-    // ---------------------------
+    // ======================================================
+    //                 CLASE INTERNA PRODUCTO
+    // ======================================================
     public static class Producto {
         private final String nombre;
         private final String tipo;
