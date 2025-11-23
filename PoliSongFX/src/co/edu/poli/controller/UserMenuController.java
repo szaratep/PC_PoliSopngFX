@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
 
@@ -71,6 +72,19 @@ public class UserMenuController {
     // --------------------------
     @FXML
     private void cerrarSesion(javafx.event.ActionEvent event) {
-        cambiarVista("/co/edu/poli/view/MainPage.fxml", (Node) event.getSource());
+        // 1. Cerrar la sesión
+        co.edu.poli.negocio.Session.cerrarSesion();
+
+        // 2. Mostrar alerta de sesión cerrada
+        Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+        alerta.setTitle("Sesión cerrada");
+        alerta.setHeaderText(null);
+        alerta.setContentText("La sesión se cerró exitosamente.");
+        
+        // 3. Esperar a que el usuario presione OK antes de cambiar la vista
+        alerta.showAndWait().ifPresent(response -> {
+            // 4. Cambiar a la vista principal (MainPage)
+            cambiarVista("/application/MainPage.fxml", (Node) event.getSource());
+        });
     }
 }
