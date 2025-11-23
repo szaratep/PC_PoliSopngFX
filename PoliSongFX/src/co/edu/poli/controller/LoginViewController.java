@@ -113,9 +113,8 @@ public class LoginViewController {
     @FXML
     private void RegistroSesion(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/edu/poli/view/RegistroView.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/edu/poli/view/RegisterView.fxml"));
             Parent root = loader.load();
-
             Stage stage = new Stage();
             stage.setTitle("Registro de Usuario");
             stage.setScene(new Scene(root));
