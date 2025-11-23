@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:controller="co.edu.poli.controller.HistorialComprasController"
+            prefHeight="500" prefWidth="700"
+            xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml">
+
+    <VBox spacing="20" alignment="CENTER" AnchorPane.topAnchor="20" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20">
+
+        <Label text="Historial de Compras" style="-fx-font-size: 26px; -fx-font-weight: bold;"/>
+
+        <TableView fx:id="tablaHistorial" prefHeight="350">
+            <columns>
+                <TableColumn text="ID Compra" prefWidth="120"/>
+                <TableColumn text="Producto" prefWidth="180"/>
+                <TableColumn text="Cantidad" prefWidth="100"/>
+                <TableColumn text="Precio Total" prefWidth="120"/>
+                <TableColumn text="Fecha" prefWidth="150"/>
+            </columns>
+        </TableView>
+
+        <Button text="Volver al Menú" onAction="#volverMenu"
+                style="-fx-font-size: 16px; -fx-padding: 10 20;"/>
+
+    </VBox>
+
+</AnchorPane>

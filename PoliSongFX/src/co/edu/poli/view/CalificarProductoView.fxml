@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:controller="co.edu.poli.controller.CalificarProductosController"
+            prefHeight="500" prefWidth="700"
+            xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml">
+
+    <VBox spacing="20" alignment="CENTER"
+          AnchorPane.topAnchor="20" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20">
+
+        <Label text="Calificar Productos"
+               style="-fx-font-size: 26px; -fx-font-weight: bold;"/>
+
+        <ComboBox fx:id="comboProductos" promptText="Selecciona un producto"
+                  prefWidth="300"/>
+
+        <Slider fx:id="sliderCalificacion" min="1" max="5" value="3"
+                majorTickUnit="1" showTickLabels="true" showTickMarks="true"
+                blockIncrement="1" prefWidth="300"/>
+
+        <Button text="Enviar Calificación" onAction="#enviarCalificacion"
+                style="-fx-font-size: 16px; -fx-padding: 10 20;"/>
+
+        <Button text="Volver al Menú" onAction="#volverMenu"
+                style="-fx-font-size: 16px; -fx-padding: 10 20;"/>
+
+    </VBox>
+
+</AnchorPane>

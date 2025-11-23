@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="co.edu.poli.controller.CatalogoController">
+
+    <!-- TITULO -->
+    <top>
+        <HBox alignment="CENTER" padding="20">
+            <Label text="Catálogo de Productos"
+                   style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+        </HBox>
+    </top>
+
+    <!-- TABLA -->
+    <center>
+        <VBox spacing="10" padding="20">
+            <TableView fx:id="tablaProductos">
+                <columns>
+                    <TableColumn fx:id="colNombre" text="Nombre" prefWidth="200"/>
+                    <TableColumn fx:id="colTipo" text="Tipo" prefWidth="100"/>
+                    <TableColumn fx:id="colPrecio" text="Precio" prefWidth="100"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </center>
+
+    <!-- BOTONES -->
+    <bottom>
+        <HBox spacing="15" padding="20" alignment="CENTER">
+            <Button text="Agregar al Carrito" onAction="#agregarCarrito"/>
+            <Button text="Actualizar" onAction="#refrescar"/>
+            <Button text="Volver" onAction="#volverMenu"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>

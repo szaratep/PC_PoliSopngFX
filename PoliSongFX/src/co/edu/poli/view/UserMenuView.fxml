@@ -1,69 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<BorderPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="co.edu.poli.controller.UserMenuController">
+<BorderPane fx:id="root" xmlns:fx="http://javafx.com/fxml" fx:controller="co.edu.poli.controller.UserMenuController">
 
     <top>
-        <VBox alignment="CENTER" spacing="5" BorderPane.alignment="CENTER">
-            <padding>
-                <Insets top="20" bottom="20"/>
-            </padding>
-            <Label text="Bienvenido a PoliSong" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
-            <Label fx:id="lblUsuario" text="Usuario: ---" style="-fx-font-size: 16px;"/>
-        </VBox>
+        <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-background-color: #1a1a1a; -fx-padding: 15;">
+            <Label text="Menú del Usuario" style="-fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;"/>
+        </HBox>
     </top>
 
     <center>
-        <GridPane hgap="20" vgap="20" alignment="CENTER">
-            <padding>
-                <Insets top="20" bottom="20" left="20" right="20"/>
-            </padding>
-
-            <Button text="Gestionar Playlists"
-                    fx:id="btnPlaylists"
-                    onAction="#onPlaylists"
-                    style="-fx-font-size: 16px; -fx-pref-width: 220px; -fx-pref-height: 60px;"
-                    GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-
-            <Button text="Carrito de Compras"
-                    fx:id="btnCarrito"
-                    onAction="#onCarrito"
-                    style="-fx-font-size: 16px; -fx-pref-width: 220px; -fx-pref-height: 60px;"
-                    GridPane.rowIndex="0" GridPane.columnIndex="1"/>
-
-            <Button text="Buscar Canciones"
-                    fx:id="btnBuscar"
-                    onAction="#onBuscar"
-                    style="-fx-font-size: 16px; -fx-pref-width: 220px; -fx-pref-height: 60px;"
-                    GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-
-            <Button text="Catálogo de Canciones"
-                    fx:id="btnCatalogo"
-                    onAction="#onCatalogo"
-                    style="-fx-font-size: 16px; -fx-pref-width: 220px; -fx-pref-height: 60px;"
-                    GridPane.rowIndex="1" GridPane.columnIndex="1"/>
-
-            <Button text="Mi Perfil"
-                    fx:id="btnPerfil"
-                    onAction="#onPerfil"
-                    style="-fx-font-size: 16px; -fx-pref-width: 220px; -fx-pref-height: 60px;"
-                    GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-
-            <Button text="Cerrar Sesión"
-                    fx:id="btnCerrar"
-                    onAction="#onCerrarSesion"
-                    style="-fx-font-size: 16px; -fx-pref-width: 220px; -fx-pref-height: 60px; -fx-background-color: #d9534f; -fx-text-fill: white;"
-                    GridPane.rowIndex="2" GridPane.columnIndex="1"/>
-
-        </GridPane>
+        <VBox alignment="CENTER" spacing="20">
+            <Button text="Catálogo de Vinilos" onAction="#irCatalogo" prefWidth="250"/>
+            <Button text="Carrito de Compras" onAction="#irCarrito" prefWidth="250"/>
+            <Button text="Mi Perfil" onAction="#irMiPerfil" prefWidth="250"/>
+            <Button text="Historial de Compras" onAction="#irHistorial" prefWidth="250"/>
+            <Button text="Calificar Productos" onAction="#irCalificarProductos" prefWidth="250"/>
+        </VBox>
     </center>
+
+    <bottom>
+        <HBox alignment="CENTER" style="-fx-padding: 20;">
+            <Button text="Cerrar Sesión" onAction="#cerrarSesion" style="-fx-background-color: #d9534f; -fx-text-fill: white;" prefWidth="200"/>
+        </HBox>
+    </bottom>
 
 </BorderPane>
