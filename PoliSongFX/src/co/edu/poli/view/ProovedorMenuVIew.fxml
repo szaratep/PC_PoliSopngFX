@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox spacing="20" alignment="CENTER" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="co.edu.poli.controller.ProveedorMenuController"
+      stylesheets="@../style/menu.css">
+
+    <!-- TÍTULO -->
+    <Label text="Bienvenido Proveedor" style="-fx-font-size: 26px; -fx-font-weight: bold;" />
+
+    <!-- ETIQUETA PROVEEDOR LOGEADO -->
+    <Label fx:id="labelProveedorNombre" text="Proveedor: ---"
+           style="-fx-font-size: 16px;" />
+
+    <!-- GRID DE BOTONES -->
+    <GridPane hgap="20" vgap="20">
+        <padding><Insets top="10" left="10" right="10" bottom="10"/></padding>
+
+        <!-- Botón 1: Gestionar Inventario -->
+        <Button text="Gestionar Inventario"
+                fx:id="btnInventario"
+                onAction="#abrirGestionInventario"
+                GridPane.rowIndex="0" GridPane.columnIndex="0"
+                prefWidth="200" prefHeight="60"/>
+
+        <!-- Botón 2: Ver Pedidos Pendientes -->
+        <Button text="Pedidos Pendientes"
+                fx:id="btnPedidosPendientes"
+                onAction="#abrirPedidosPendientes"
+                GridPane.rowIndex="0" GridPane.columnIndex="1"
+                prefWidth="200" prefHeight="60"/>
+
+        <!-- Botón 3: Mis Datos -->
+        <Button text="Mi Perfil"
+                fx:id="btnMiPerfil"
+                onAction="#abrirPerfil"
+                GridPane.rowIndex="1" GridPane.columnIndex="0"
+                prefWidth="200" prefHeight="60"/>
+
+        <!-- Botón 4: Registrar Nuevo Producto -->
+        <Button text="Registrar Producto"
+                fx:id="btnRegistrarProducto"
+                onAction="#abrirRegistrarProducto"
+                GridPane.rowIndex="1" GridPane.columnIndex="1"
+                prefWidth="200" prefHeight="60"/>
+
+        <!-- Botón 5: Reportes -->
+        <Button text="Reportes"
+                fx:id="btnReportes"
+                onAction="#abrirReportes"
+                GridPane.rowIndex="2" GridPane.columnIndex="0"
+                prefWidth="200" prefHeight="60"/>
+
+        <!-- Botón 6: Cerrar sesión -->
+        <Button text="Cerrar Sesión"
+                fx:id="btnCerrarSesion"
+                onAction="#cerrarSesion"
+                GridPane.rowIndex="2" GridPane.columnIndex="1"
+                prefWidth="200" prefHeight="60"
+                style="-fx-background-color: #d9534f; -fx-text-fill: white;"/>
+    </GridPane>
+
+</VBox>
