@@ -23,26 +23,35 @@ public class viniloDAO {
      * 
      * @param v Objeto {@link vinilo} con los datos del vinilo a registrar.
      */
-    public void createVinilo(vinilo v) {
-        String sql = "INSERT INTO vinilo (id_vinilo, nombre, artista, anio, precio, inventario) VALUES (?, ?, ?, ?, ?, ?)";
+    public int createVinilo(vinilo v) {
+        String sql = "INSERT INTO vinilo (nombre, artista, anio, precio, inventario) VALUES (?, ?, ?, ?, ?)";
+        int idGenerado = -1;
 
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
-            stmt.setInt(1, v.getId_vinilo());
-            stmt.setString(2, v.getNombre());
-            stmt.setString(3, v.getArtista());
-            stmt.setInt(4, v.getAnio());
-            stmt.setDouble(5, v.getPrecio());
-            stmt.setInt(6, v.getInventario());
+            stmt.setString(1, v.getNombre());
+            stmt.setString(2, v.getArtista());
+            stmt.setInt(3, v.getAnio());
+            stmt.setDouble(4, v.getPrecio());
+            stmt.setInt(5, v.getInventario());
 
             stmt.executeUpdate();
-            System.out.println("viniloDAO -> createVinilo: Vinilo creado correctamente");
+
+            ResultSet rs = stmt.getGeneratedKeys();
+            if (rs.next()) {
+                idGenerado = rs.getInt(1);
+                v.setId_vinilo(idGenerado); // actualizar el objeto
+            }
+
+            System.out.println("viniloDAO -> createVinilo: Vinilo creado correctamente con ID " + idGenerado);
 
         } catch (SQLException e) {
             System.out.println("viniloDAO -> createVinilo: Error al crear vinilo");
             System.out.println("Detalles: " + e.getMessage());
         }
+
+        return idGenerado;
     }
 
     /**

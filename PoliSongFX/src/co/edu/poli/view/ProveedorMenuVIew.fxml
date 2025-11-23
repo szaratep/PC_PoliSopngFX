@@ -21,10 +21,14 @@
 
             <!-- Nombre del proveedor activo -->
             <Label fx:id="labelProveedorNombre" style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Proveedor: ---" />
+            
             <Button fx:id="btnMiPerfil" onAction="#abrirPerfil" prefHeight="60" prefWidth="250" text="Mi Perfil" />
             <Button fx:id="btnRegistrarProducto" onAction="#abrirRegistrarProducto" prefHeight="60" prefWidth="250" text="Registrar Producto" />
-
             <Button fx:id="btnInventario" onAction="#abrirGestionInventario" prefHeight="60" prefWidth="250" text="Ver Catalogo" />
+            
+            <!-- Nuevo botón Volver -->
+            <Button fx:id="btnVolverMenu" onAction="#volverMenuPrincipal" prefHeight="60" prefWidth="250" text="Volver al Menú Principal" />
+
         </VBox>
     </center>
 

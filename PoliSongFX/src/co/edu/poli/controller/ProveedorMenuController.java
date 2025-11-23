@@ -18,6 +18,7 @@ public class ProveedorMenuController {
     @FXML private Button btnRegistrarProducto;
     @FXML private Button btnInventario;
     @FXML private Button btnCerrarSesion;
+    @FXML private Button btnVolverMenu;
 
     // --------------------------
     // NAVEGACIÓN
@@ -40,12 +41,34 @@ public class ProveedorMenuController {
 
     @FXML
     private void abrirRegistrarProducto() {
-        // TODO: Implementar la navegación al registro de productos
+    	cambiarVista("/co/edu/poli/view/RegistrarProductoView.fxml", btnRegistrarProducto);
     }
 
     @FXML
     private void abrirGestionInventario() {
-        // TODO: Implementar la navegación al inventario o catálogo
+    	cambiarVista("/co/edu/poli/view/GestionInventario.fxml", btnInventario);
+    }
+    
+    @FXML
+    private void volverMenuPrincipal() {
+        try {
+            // Cerrar la ventana actual
+            Stage actual = (Stage) btnVolverMenu.getScene().getWindow();
+            actual.close();
+
+            // Abrir ventana principal
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/application/MainPage.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setTitle("PoliSong");
+            stage.setScene(new Scene(root));
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error al abrir la ventana principal.");
+        }
     }
 
     // --------------------------
