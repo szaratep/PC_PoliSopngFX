@@ -8,8 +8,22 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.Region?>
 
 <BorderPane xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.edu.poli.controller.CarritoController">
+
+    <top>
+        <HBox spacing="10">
+            <padding>
+                <Insets bottom="10" left="10" right="10" top="10" />
+            </padding>
+
+            <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Carrito de Compras" />
+
+            <Label fx:id="lblCarritoId" style="-fx-font-size: 16px; -fx-text-fill: #555;" text="Carrito #?" />
+
+        </HBox>
+    </top>
 
     <center>
         <VBox spacing="12">
@@ -17,26 +31,30 @@
                 <Insets bottom="10" left="10" right="10" top="10" />
             </padding>
 
-            <Label style="-fx-font-size: 14px; -fx-font-weight: bold;" text="Items del Carrito" />
-
             <TableView fx:id="tablaCarrito" prefHeight="350">
                 <columns>
-                    <TableColumn fx:id="colIdItem" prefWidth="80" text="ID Item" />
-                    <TableColumn fx:id="colTipoProducto" prefWidth="100" text="Tipo" />
-                    <TableColumn fx:id="colIdCancion" prefWidth="100" text="ID Canción" />
-                    <TableColumn fx:id="colIdVinilo" prefWidth="100" text="ID Vinilo" />
-                    <TableColumn fx:id="colIdMp3" prefWidth="100" text="ID MP3" />
-                    <TableColumn fx:id="colCantidad" prefWidth="80" text="Cantidad" />
+                    <TableColumn fx:id="colTipo" prefWidth="120" text="Tipo" />
+                    <TableColumn fx:id="colNombre" prefWidth="200" text="Producto" />
+                    <TableColumn fx:id="colCantidad" prefWidth="100" text="Cantidad" />
+                    <TableColumn fx:id="colPrecio" prefWidth="120" text="Precio" />
                 </columns>
             </TableView>
+
+            <Label fx:id="lblTotal" style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Total: $0" />
         </VBox>
     </center>
 
     <bottom>
-        <HBox nodeOrientation="RIGHT_TO_LEFT" spacing="12">
+        <HBox alignment="CENTER_RIGHT" spacing="12">
             <padding>
                 <Insets bottom="10" left="10" right="10" top="10" />
             </padding>
+
+            <Button onAction="#onPagar" text="Pagar" />
+            <Button onAction="#onVolverMenu" text="Volver al Menú" />
+
+            <Region HBox.hgrow="ALWAYS" />
+
             <Button onAction="#onAgregarProducto" text="Agregar Producto" />
             <Button onAction="#onActualizarCantidad" text="Actualizar Cantidad" />
             <Button onAction="#onEliminarItem" text="Eliminar Item" />

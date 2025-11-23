@@ -2,112 +2,235 @@ package co.edu.poli.controller;
 
 import co.edu.poli.model.*;
 import co.edu.poli.negocio.*;
+import co.edu.poli.datos.*;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.stage.Stage;
+import javafx.scene.Node;
 
 import java.util.List;
 
 public class CarritoController {
 
-    @FXML private TableView<ItemCarrito> tablaCarrito;
-    @FXML private TableColumn<ItemCarrito, Integer> colIdItem;
-    @FXML private TableColumn<ItemCarrito, String> colTipoProducto;
-    @FXML private TableColumn<ItemCarrito, Integer> colIdCancion;
-    @FXML private TableColumn<ItemCarrito, Integer> colIdVinilo;
-    @FXML private TableColumn<ItemCarrito, Integer> colIdMp3;
-    @FXML private TableColumn<ItemCarrito, Integer> colCantidad;
+    @FXML private TableView<carritoItem> tablaCarrito;
+    @FXML private TableColumn<carritoItem, String> colTipo;
+    @FXML private TableColumn<carritoItem, String> colNombre;
+    @FXML private TableColumn<carritoItem, Integer> colCantidad;
+    @FXML private TableColumn<carritoItem, Double> colPrecio;
 
-    private carritoManager manager;
-    private ObservableList<ItemCarrito> itemsObservable;
+    @FXML private Label lblCarritoId;
+    @FXML private Label lblTotal;
+
+    private carritoManager manager = new carritoManager();
+    private viniloDAO viniloDao = new viniloDAO();
+    private discoMP3DAO mp3Dao = new discoMP3DAO();
+    private cancionDAO cancionDao = new cancionDAO();
+
+    private ObservableList<carritoItem> itemsObservable;
+    private int idCarrito;
 
     @FXML
     public void initialize() {
-        manager = new carritoManager();
+
+        usuario user = (usuario) Session.getUsuarioActual();
+        idCarrito = user.getId_usuario();
+
+        lblCarritoId.setText("Carrito #" + idCarrito);
+
         configurarColumnas();
         cargarCarrito();
     }
 
     private void configurarColumnas() {
-        colIdItem.setCellValueFactory(new PropertyValueFactory<>("idItem"));
-        colTipoProducto.setCellValueFactory(new PropertyValueFactory<>("tipoProducto"));
-        colIdCancion.setCellValueFactory(new PropertyValueFactory<>("idCancion"));
-        colIdVinilo.setCellValueFactory(new PropertyValueFactory<>("idVinilo"));
-        colIdMp3.setCellValueFactory(new PropertyValueFactory<>("idMp3"));
-        colCantidad.setCellValueFactory(new PropertyValueFactory<>("cantidad"));
+
+        colTipo.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getTipo_producto()));
+
+        colNombre.setCellValueFactory(cellData ->
+                new SimpleStringProperty(obtenerNombre(cellData.getValue())));
+
+        colCantidad.setCellValueFactory(cellData ->
+                new SimpleIntegerProperty(cellData.getValue().getCantidad()).asObject());
+
+        colPrecio.setCellValueFactory(cellData ->
+                new SimpleDoubleProperty(obtenerPrecio(cellData.getValue())).asObject());
     }
 
     private void cargarCarrito() {
-        if (!Session.haySesion()) return;
 
-        usuario user = (usuario) Session.getUsuarioActual();
-        List<carritoItem> items = manager.listarItems(user.getId_usuario());
-
-        itemsObservable = FXCollections.observableArrayList();
-
-        for (carritoItem ci : items) {
-            itemsObservable.add(new ItemCarrito(
-                    ci.getId_item(),
-                    ci.getTipo_producto(),
-                    ci.getId_cancion(),
-                    ci.getId_vinilo(),
-                    ci.getId_mp3(),
-                    ci.getCantidad()
-            ));
-        }
+        List<carritoItem> items = manager.listarItems(idCarrito);
+        itemsObservable = FXCollections.observableArrayList(items);
 
         tablaCarrito.setItems(itemsObservable);
+
+        calcularTotal();
     }
+
+    private String obtenerNombre(carritoItem item) {
+
+        String tipo = item.getTipo_producto();
+
+        if (tipo == null) return "Producto desconocido";
+
+        // VINILO
+        if (tipo.equalsIgnoreCase("Vinilo")) {
+            if (item.getId_vinilo() != null) {
+                vinilo v = viniloDao.readVinilo(item.getId_vinilo());
+                return v != null ? v.getNombre() : "Vinilo desconocido";
+            }
+            return "Vinilo desconocido";
+        }
+
+        // MP3
+        if (tipo.equalsIgnoreCase("MP3")) {
+            if (item.getId_cancion() != null) {
+                cancion c = cancionDao.readCancion(item.getId_cancion());
+                return c != null ? c.getNombre() + " (MP3)" : "MP3 desconocido";
+            }
+            return "MP3 desconocido";
+        }
+
+        // CANCIÓN
+        if (tipo.equalsIgnoreCase("Cancion")) {
+            if (item.getId_cancion() != null) {
+                cancion c = cancionDao.readCancion(item.getId_cancion());
+                return c != null ? c.getNombre() : "Canción desconocida";
+            }
+            return "Canción desconocida";
+        }
+
+        return "Producto desconocido";
+    }
+
+    private double obtenerPrecio(carritoItem item) {
+
+        String tipo = item.getTipo_producto();
+        if (tipo == null) return 0;
+
+        // VINILO
+        if (tipo.equalsIgnoreCase("Vinilo")) {
+            vinilo v = viniloDao.readVinilo(item.getId_vinilo());
+            return (v != null && v.getPrecio() > 0) ? v.getPrecio() : 0;
+        }
+
+        // MP3
+        if (tipo.equalsIgnoreCase("MP3")) {
+
+            // si no tiene id_cancion evitar el NPE
+            if (item.getId_cancion() == null) {
+                return 2000; // solo costo de MP3
+            }
+
+            cancionDAO cdao = new cancionDAO();
+            cancion c = cdao.readCancion(item.getId_cancion());
+
+            return (c != null ? c.getPrecio() : 0) + 2000;
+        }
+
+        return 0;
+    }
+
+
+    private void calcularTotal() {
+        double total = 0;
+
+        for (carritoItem item : itemsObservable) {
+            total += obtenerPrecio(item) * item.getCantidad();
+        }
+
+        lblTotal.setText("Total: $" + total);
+    }
+
+    // ---------------------------------------------------
+    // BOTONES
+    // ---------------------------------------------------
 
     @FXML
     void onActualizarCantidad(ActionEvent event) {
-        // Aquí se puede implementar la actualización de cantidad usando manager.actualizarItem(...)
+
+        carritoItem seleccionado = tablaCarrito.getSelectionModel().getSelectedItem();
+        if (seleccionado == null) {
+            alert("Seleccione un producto");
+            return;
+        }
+
+        TextInputDialog dialog = new TextInputDialog("" + seleccionado.getCantidad());
+        dialog.setTitle("Actualizar cantidad");
+        dialog.setHeaderText("Modificar cantidad");
+        dialog.setContentText("Nueva cantidad:");
+
+        dialog.showAndWait().ifPresent(valor -> {
+            try {
+                int nuevaCantidad = Integer.parseInt(valor);
+                manager.actualizarCantidad(idCarrito, seleccionado.getId_item(), nuevaCantidad);
+                cargarCarrito();
+            } catch (Exception e) {
+                alert("Cantidad inválida");
+            }
+        });
     }
 
     @FXML
     void onAgregarProducto(ActionEvent event) {
-        // Se puede redirigir a la MainPage para agregar más productos
+        abrirVentana("/application/MainPage.fxml", event);
     }
 
     @FXML
     void onEliminarItem(ActionEvent event) {
-        // Eliminar el item seleccionado usando manager.eliminarItem(...)
+        carritoItem seleccionado = tablaCarrito.getSelectionModel().getSelectedItem();
+        if (seleccionado == null) {
+            alert("Seleccione un producto");
+            return;
+        }
+
+        manager.eliminarItem(seleccionado.getId_item());
+        cargarCarrito();
     }
 
     @FXML
     void onVaciarCarrito(ActionEvent event) {
-        // Vaciar el carrito completo usando manager.eliminarCarrito(...)
+        manager.eliminarCarrito(idCarrito);
+        cargarCarrito();
     }
 
-    // ======================================================
-    // Clase interna para mostrar los items en la tabla
-    // ======================================================
-    public static class ItemCarrito {
-        private final Integer idItem;
-        private final String tipoProducto;
-        private final Integer idCancion;
-        private final Integer idVinilo;
-        private final Integer idMp3;
-        private final Integer cantidad;
+    @FXML
+    void onVolverMenu(ActionEvent event) {
+        abrirVentana("/application/MainPage.fxml", event);
+    }
 
-        public ItemCarrito(Integer idItem, String tipoProducto, Integer idCancion, Integer idVinilo, Integer idMp3, Integer cantidad) {
-            this.idItem = idItem;
-            this.tipoProducto = tipoProducto;
-            this.idCancion = idCancion;
-            this.idVinilo = idVinilo;
-            this.idMp3 = idMp3;
-            this.cantidad = cantidad;
+    @FXML
+    void onPagar(ActionEvent event) {
+        abrirVentana("/co/edu/poli/view/PagoView.fxml", event);
+    }
+
+    // ---------------------------------------------------
+
+    private void abrirVentana(String ruta, ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(ruta));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.show();
+            ((Stage)((Node)event.getSource()).getScene().getWindow()).close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+    }
 
-        public Integer getIdItem() { return idItem; }
-        public String getTipoProducto() { return tipoProducto; }
-        public Integer getIdCancion() { return idCancion; }
-        public Integer getIdVinilo() { return idVinilo; }
-        public Integer getIdMp3() { return idMp3; }
-        public Integer getCantidad() { return cantidad; }
+    private void alert(String msg) {
+        Alert a = new Alert(Alert.AlertType.WARNING);
+        a.setHeaderText(null);
+        a.setContentText(msg);
+        a.show();
     }
 }

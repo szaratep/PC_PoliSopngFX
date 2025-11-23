@@ -118,5 +118,32 @@ public class carritoManager {
         // Aquí necesitas un método en carritoItemDAO para listar items por carrito
         return itemDao.listarItemsPorCarrito(c.getId_carrito());
     }
+    public boolean actualizarCantidad(int idCarrito, int idItem, int nuevaCantidad) {
+
+        if (nuevaCantidad <= 0) {
+            System.out.println("carritoManager -> actualizarCantidad: cantidad inválida");
+            return false;
+        }
+
+        carritoItemDAO dao = new carritoItemDAO();
+        carritoItem item = dao.readItem(idItem);
+
+        if (item == null) {
+            System.out.println("carritoManager -> actualizarCantidad: item no existe");
+            return false;
+        }
+
+        if (item.getId_carrito() != idCarrito) {
+            System.out.println("carritoManager -> actualizarCantidad: item no pertenece al carrito");
+            return false;
+        }
+
+        item.setCantidad(nuevaCantidad);
+        dao.updateItem(item);
+
+        System.out.println("carritoManager -> actualizarCantidad: cantidad actualizada");
+        return true;
+    }
+
 
 }
