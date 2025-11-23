@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="co.edu.poli.controller.GestionarProductosController">
+
+    <top>
+        <ToolBar>
+            <Button text="Crear Nuevo Producto" onAction="#crearProducto"/>
+            <Button text="Eliminar" onAction="#eliminarProducto"/>
+            <Button text="Volver al Menú" onAction="#volverMenu"/>
+        </ToolBar>
+    </top>
+
+    <center>
+        <TableView fx:id="tablaProductos" prefHeight="400" prefWidth="600">
+            <columns>
+                <TableColumn fx:id="colNombre" text="Nombre" prefWidth="200"/>
+                <TableColumn fx:id="colTipo" text="Tipo" prefWidth="100"/>
+                <TableColumn fx:id="colPrecio" text="Precio" prefWidth="100"/>
+                <TableColumn fx:id="colStock" text="Stock" prefWidth="100"/>
+            </columns>
+        </TableView>
+    </center>
+
+    <padding>
+        <Insets top="10" right="10" bottom="10" left="10"/>
+    </padding>
+
+</BorderPane>

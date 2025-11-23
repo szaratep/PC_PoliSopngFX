@@ -113,11 +113,43 @@ public class AdminMenuController {
     
     @FXML
     private void abrirGestionUsuarios() {
-        // TODO: Implementar gestión de usuarios
+        /*try {
+            // Cerrar la ventana actual
+            Stage stageActual = (Stage) btnGestionUsuarios.getScene().getWindow();
+            stageActual.close();
+
+            // Abrir ventana de gestión de usuarios (pendiente implementar FXML)
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/edu/poli/view/GestionarUsuariosView.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setTitle("Gestión de Usuarios");
+            stage.setScene(new Scene(root));
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
     }
 
     @FXML
     private void abrirGestionProductos() {
-        // TODO: Implementar gestión de productos
+        try {
+            // Cerrar la ventana actual (menú del admin)
+            Stage stageActual = (Stage) btnGestionProductos.getScene().getWindow();
+            stageActual.close();
+
+            // Abrir ventana de gestión de productos
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/edu/poli/view/GestionProductosAdminView.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setTitle("Gestión de Productos");
+            stage.setScene(new Scene(root));
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="10" xmlns="http://javafx.com/javafx/21.0.1"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="co.edu.poli.controller.RegistrarCancionController">
+    <padding>
+        <Insets top="10" right="10" bottom="10" left="10"/>
+    </padding>
+
+    <Label text="Registro de Canción" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
+
+    <TableView fx:id="tablaCanciones" prefHeight="300" prefWidth="600">
+        <columns>
+            <TableColumn fx:id="colNombre" text="Nombre" prefWidth="150"/>
+            <TableColumn fx:id="colDuracion" text="Duración (min)" prefWidth="100"/>
+            <TableColumn fx:id="colPrecio" text="Precio" prefWidth="100"/>
+            <TableColumn fx:id="colTamano" text="Tamaño (MB)" prefWidth="100"/>
+        </columns>
+    </TableView>
+
+    <HBox spacing="10">
+        <Button text="Registrar" onAction="#registrarCancion"/>
+        <Button text="Editar" onAction="#editarCancion"/>
+        <Button text="Volver" onAction="#volverMenu"/>
+    </HBox>
+</VBox>

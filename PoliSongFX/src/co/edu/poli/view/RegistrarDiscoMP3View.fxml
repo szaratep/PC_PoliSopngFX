@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="10" xmlns="http://javafx.com/javafx/21.0.1"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="co.edu.poli.controller.RegistrarDiscoMP3Controller">
+    <padding>
+        <Insets top="10" right="10" bottom="10" left="10"/>
+    </padding>
+
+    <Label text="Registro de Disco MP3" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
+
+    <TableView fx:id="tablaDiscosMP3" prefHeight="300" prefWidth="600">
+        <columns>
+            <TableColumn fx:id="colNombre" text="Nombre" prefWidth="200"/>
+            <TableColumn fx:id="colFecha" text="Fecha de Lanzamiento" prefWidth="200"/>
+        </columns>
+    </TableView>
+
+    <HBox spacing="10">
+        <Button text="Registrar" onAction="#registrarDiscoMP3"/>
+        <Button text="Editar" onAction="#editarDiscoMP3"/>
+        <Button text="Volver" onAction="#volverMenu"/>
+    </HBox>
+</VBox>

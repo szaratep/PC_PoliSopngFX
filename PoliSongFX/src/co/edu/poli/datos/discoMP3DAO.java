@@ -15,24 +15,33 @@ public class discoMP3DAO {
     /**
      * Crear un disco MP3
      */
-    public void createMP3(discoMP3 mp3) {
-        String sql = "INSERT INTO discomp3 (id_MP3, nombre, fecha_salida) VALUES (?, ?, ?)";
+    public int createMP3(discoMP3 mp3) {
+        String sql = "INSERT INTO discomp3 (nombre, fecha_salida) VALUES (?, ?)";
+        int idGenerado = -1;
 
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
-            stmt.setInt(1, mp3.getId_MP3());
-            stmt.setString(2, mp3.getNombre());
-            stmt.setDate(3, new java.sql.Date(mp3.getFecha_salida().getTime()));
-
+            stmt.setString(1, mp3.getNombre());
+            stmt.setDate(2, new java.sql.Date(mp3.getFecha_salida().getTime()));
             stmt.executeUpdate();
-            System.out.println("discoMP3DAO -> createMP3: Disco MP3 creado correctamente");
+
+            // Obtener ID generado
+            ResultSet rs = stmt.getGeneratedKeys();
+            if (rs.next()) {
+                idGenerado = rs.getInt(1);
+                mp3.setId_MP3(idGenerado); // Asignamos al objeto
+                System.out.println("discoMP3DAO -> createMP3: Disco MP3 creado con ID " + idGenerado);
+            }
 
         } catch (SQLException e) {
             System.out.println("discoMP3DAO -> createMP3: Error al crear disco MP3");
             System.out.println("Detalles: " + e.getMessage());
         }
+
+        return idGenerado;
     }
+
 
     /**
      * Leer un disco MP3
