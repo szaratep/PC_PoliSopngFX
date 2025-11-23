@@ -1,74 +1,72 @@
 package co.edu.poli.controller;
 
+import java.io.IOException;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.stage.Stage;
+import javafx.fxml.FXMLLoader;
 
 public class UserMenuController {
 
-    @FXML
-    private Label lblUsuario;
-
-    private String usuario;
-
-    public void setUsuario(String usuario) {
-        this.usuario = usuario;
-        lblUsuario.setText("Usuario: " + usuario);
-    }
-
-    private void abrirVista(String nombreFxml) {
+    // --------------------------
+    // MÉTODO BASE PARA CAMBIAR DE VISTA
+    // --------------------------
+    private void cambiarVista(String rutaFXML, Node nodo) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/edu/poli/view/" + nombreFxml));
-            Parent root = loader.load();
-
-            Stage stage = new Stage();
+            Parent root = FXMLLoader.load(getClass().getResource(rutaFXML));
+            Stage stage = (Stage) nodo.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
-
-        } catch (Exception e) {
+        } 
+        catch (IOException e) {
             e.printStackTrace();
+            System.out.println("Error cargando vista: " + rutaFXML);
         }
     }
 
+    // --------------------------
+    // BOTONES PRINCIPALES
+    // --------------------------
+
     @FXML
-    private void onPlaylists() {
-        abrirVista("PlayListView.fxml");
+    private void irAMiPerfil(javafx.event.ActionEvent event) {
+        cambiarVista("/co/edu/poli/views/MiPerfil.fxml", (Node) event.getSource());
     }
 
     @FXML
-    private void onCarrito() {
-        abrirVista("CarritoView.fxml");
+    private void irACarrito(javafx.event.ActionEvent event) {
+        cambiarVista("/co/edu/poli/views/Carrito.fxml", (Node) event.getSource());
     }
 
     @FXML
-    private void onBuscar() {
-        abrirVista("BuscarCancionesView.fxml"); // Si no existe la creo
+    private void irACatalogo(javafx.event.ActionEvent event) {
+        cambiarVista("/co/edu/poli/views/Catalogo.fxml", (Node) event.getSource());
     }
 
     @FXML
-    private void onCatalogo() {
-        abrirVista("CatalogoView.fxml"); // Si no existe la creo
+    private void irAPlaylist(javafx.event.ActionEvent event) {
+        cambiarVista("/co/edu/poli/views/Playlist.fxml", (Node) event.getSource());
     }
 
     @FXML
-    private void onPerfil() {
-        abrirVista("PerfilView.fxml"); // Si no existe la creo
+    private void irAHistorialCompras(javafx.event.ActionEvent event) {
+        cambiarVista("/co/edu/poli/views/HistorialCompras.fxml", (Node) event.getSource());
     }
 
     @FXML
-    private void onCerrarSesion() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/edu/poli/view/LoginView.fxml"));
-            Parent root = loader.load();
+    private void irACalificarProductos(javafx.event.ActionEvent event) {
+        cambiarVista("/co/edu/poli/views/CalificarProductos.fxml", (Node) event.getSource());
+    }
 
-            Stage stage = (Stage) lblUsuario.getScene().getWindow();
-            stage.setScene(new Scene(root));
+    // --------------------------
+    // CERRAR SESIÓN
+    // --------------------------
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    @FXML
+    private void cerrarSesion(javafx.event.ActionEvent event) {
+        cambiarVista("/co/edu/poli/views/Login.fxml", (Node) event.getSource());
     }
 }
+
