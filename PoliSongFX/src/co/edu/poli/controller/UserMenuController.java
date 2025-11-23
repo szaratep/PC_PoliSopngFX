@@ -32,12 +32,12 @@ public class UserMenuController {
 
     @FXML
     private void irAMiPerfil(javafx.event.ActionEvent event) {
-        cambiarVista("/co/edu/poli/views/MiPerfil.fxml", (Node) event.getSource());
+        cambiarVista("/co/edu/poli/views/MiPerfilView.fxml", (Node) event.getSource());
     }
 
     @FXML
     private void irACarrito(javafx.event.ActionEvent event) {
-        cambiarVista("/co/edu/poli/views/Carrito.fxml", (Node) event.getSource());
+        cambiarVista("/co/edu/poli/views/CarritoView.fxml", (Node) event.getSource());
     }
 
     @FXML
@@ -47,17 +47,17 @@ public class UserMenuController {
 
     @FXML
     private void irAPlaylist(javafx.event.ActionEvent event) {
-        cambiarVista("/co/edu/poli/views/Playlist.fxml", (Node) event.getSource());
+        cambiarVista("/co/edu/poli/views/PlaylistView.fxml", (Node) event.getSource());
     }
 
     @FXML
     private void irAHistorialCompras(javafx.event.ActionEvent event) {
-        cambiarVista("/co/edu/poli/views/HistorialCompras.fxml", (Node) event.getSource());
+        cambiarVista("/co/edu/poli/views/HistorialComprasView.fxml", (Node) event.getSource());
     }
 
     @FXML
     private void irACalificarProductos(javafx.event.ActionEvent event) {
-        cambiarVista("/co/edu/poli/views/CalificarProductos.fxml", (Node) event.getSource());
+        cambiarVista("/co/edu/poli/views/CalificarProductosView.fxml", (Node) event.getSource());
     }
 
     // --------------------------
@@ -66,7 +66,7 @@ public class UserMenuController {
 
     @FXML
     private void cerrarSesion(javafx.event.ActionEvent event) {
-        cambiarVista("/co/edu/poli/views/Login.fxml", (Node) event.getSource());
+        cambiarVista("/co/edu/poli/views/MainPage.fxml", (Node) event.getSource());
     }
 }
 

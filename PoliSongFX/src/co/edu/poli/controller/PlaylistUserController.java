@@ -7,7 +7,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
-public class PlaylistController {
+public class PlaylistUserController {
 
     @FXML private TextField txtIdPlaylist;
     @FXML private TextField txtNombre;

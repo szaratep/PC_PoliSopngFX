@@ -5,7 +5,7 @@
 
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="co.edu.poli.controller.PlaylistController">
+            fx:controller="co.edu.poli.controller.PlaylistUserController">
 
     <top>
         <HBox spacing="10">
