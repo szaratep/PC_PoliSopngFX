@@ -140,4 +140,21 @@ public class pedidoManager {
         pedidoDao.deletePedido(idPedido);
         System.out.println("pedidoManager -> eliminarPedido: Pedido eliminado (ID: " + idPedido + ")");
     }
+    
+    // Dentro de la clase pedidoManager
+
+    /**
+     * Devuelve todos los pedidos de un usuario.
+     */
+    public java.util.List<pedido> getPedidosUsuario(int idUsuario) {
+        return pedidoDao.readPedidosUsuario(idUsuario);
+    }
+
+    /**
+     * Devuelve todos los detalles de un pedido.
+     */
+    public java.util.List<pedidoDetalle> getDetallesPedido(int idPedido) {
+        return detalleDao.readDetallesPedido(idPedido);
+    }
+
 }

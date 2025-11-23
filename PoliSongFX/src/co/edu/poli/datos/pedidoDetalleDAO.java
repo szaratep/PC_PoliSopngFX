@@ -139,4 +139,36 @@ public class pedidoDetalleDAO {
             System.out.println("Detalles: " + e.getMessage());
         }
     }
+    
+    public java.util.List<pedidoDetalle> readDetallesPedido(int idPedido) {
+        java.util.List<pedidoDetalle> lista = new java.util.ArrayList<>();
+
+        String sql = "SELECT * FROM pedido_detalle WHERE id_pedido = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, idPedido);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                lista.add(new pedidoDetalle(
+                        rs.getInt("id_detalle"),
+                        rs.getInt("id_pedido"),
+                        rs.getString("tipo_Producto"),
+                        rs.getInt("id_producto"),
+                        rs.getInt("cantidad"),
+                        rs.getDouble("precio_unitario")
+                ));
+            }
+
+            System.out.println("pedidoDetalleDAO -> readDetallesPedido: " + lista.size() + " detalles encontrados");
+
+        } catch (SQLException e) {
+            System.out.println("pedidoDetalleDAO -> readDetallesPedido: Error");
+            System.out.println("Detalles: " + e.getMessage());
+        }
+
+        return lista;
+    }
 }

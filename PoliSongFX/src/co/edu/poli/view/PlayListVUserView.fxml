@@ -1,63 +1,81 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="co.edu.poli.controller.PlaylistUserController">
+<BorderPane xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.edu.poli.controller.PlaylistUserController">
 
     <top>
         <HBox spacing="10">
             <padding>
-                <Insets top="10" right="10" bottom="10" left="10"/>
+                <Insets bottom="10" left="10" right="10" top="10" />
             </padding>
-
-            <Label text="ID Playlist:"/>
-            <TextField fx:id="txtIdPlaylist" prefWidth="80"/>
-            <Button text="Cargar" onAction="#onCargarPlaylist"/>
+            <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Gestión de Playlists" />
         </HBox>
     </top>
 
     <center>
         <VBox spacing="10">
             <padding>
-                <Insets top="10" right="10" bottom="10" left="10"/>
+                <Insets bottom="10" left="10" right="10" top="10" />
             </padding>
 
-            <HBox spacing="10">
-                <Label text="Nombre:"/>
-                <TextField fx:id="txtNombre" prefWidth="150"/>
-
-                <Label text="Usuario ID:"/>
-                <TextField fx:id="txtUsuarioId" prefWidth="80"/>
-
-                <Label text="Pública:"/>
-                <CheckBox fx:id="chkPublica"/>
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label text="Nombre:" />
+                <TextField fx:id="txtNombre" prefWidth="200" />
+                <Label text="Pública:" />
+                <CheckBox fx:id="chkPublica" />
             </HBox>
 
-            <Label text="Canciones en la Playlist:"/>
+            <HBox spacing="20">
 
-            <TableView fx:id="tablaCanciones" prefHeight="300">
-                <columns>
-                    <TableColumn fx:id="colIdCancion" text="ID Canción" prefWidth="150"/>
-                </columns>
-            </TableView>
+                <!-- Tabla de todas las canciones del sistema -->
+                <VBox spacing="5">
+                    <Label text="Todas las canciones:" />
+                    <TableView fx:id="tablaTodasCanciones" prefHeight="200" prefWidth="350">
+                        <columns>
+                            <TableColumn fx:id="colIdCancionSistema" prefWidth="80" text="ID Canción" />
+                            <TableColumn fx:id="colNombreCancionSistema" prefWidth="180" text="Nombre" />
+                            <TableColumn fx:id="colDuracionSistema" prefWidth="80" text="Duración" />
+                        </columns>
+                    </TableView>
+                </VBox>
+
+                <!-- Tabla de canciones en la playlist -->
+                <VBox spacing="5">
+                    <Label text="Canciones en la Playlist:" />
+                    <TableView fx:id="tablaCanciones" prefHeight="200" prefWidth="350">
+                        <columns>
+                            <TableColumn fx:id="colIdCancion" prefWidth="80" text="ID Canción" />
+                            <TableColumn fx:id="colNombreCancion" prefWidth="180" text="Nombre" />
+                            <TableColumn fx:id="colDuracion" prefWidth="80" text="Duración" />
+                        </columns>
+                    </TableView>
+                </VBox>
+
+            </HBox>
 
         </VBox>
     </center>
 
     <bottom>
-        <HBox spacing="12">
+        <HBox alignment="CENTER" spacing="12">
             <padding>
-                <Insets top="10" right="10" bottom="10" left="10"/>
+                <Insets bottom="10" left="10" right="10" top="10" />
             </padding>
-
-            <Button text="Crear Playlist" onAction="#onCrearPlaylist"/>
-            <Button text="Actualizar Playlist" onAction="#onActualizarPlaylist"/>
-            <Button text="Agregar Canción" onAction="#onAgregarCancion"/>
-            <Button text="Eliminar Canción" onAction="#onEliminarCancion"/>
-            <Button text="Eliminar Playlist" onAction="#onEliminarPlaylist"/>
+            <Button onAction="#onCrearPlaylist" text="Crear Playlist" />
+            <Button onAction="#onAgregarCancion" text="Agregar Canción" />
+            <Button onAction="#onEliminarCancion" text="Eliminar Canción" />
+            <Button onAction="#onVerPlaylists" text="Ver Playlists" />
+            <Button onAction="#onVolver" text="Volver" />
         </HBox>
     </bottom>
 

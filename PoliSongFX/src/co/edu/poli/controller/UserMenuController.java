@@ -15,12 +15,19 @@ public class UserMenuController {
     // --------------------------
     private void cambiarVista(String rutaFXML, Node nodo) {
         try {
+            // Cargar la vista
             Parent root = FXMLLoader.load(getClass().getResource(rutaFXML));
-            Stage stage = (Stage) nodo.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
-        } 
-        catch (IOException e) {
+
+            // Crear una nueva ventana (Stage) para la nueva vista
+            Stage nuevaVentana = new Stage();
+            nuevaVentana.setScene(new Scene(root));
+            nuevaVentana.show();
+
+            // Cerrar la ventana actual
+            Stage ventanaActual = (Stage) nodo.getScene().getWindow();
+            ventanaActual.close();
+
+        } catch (IOException e) {
             e.printStackTrace();
             System.out.println("Error cargando vista: " + rutaFXML);
         }
@@ -29,44 +36,41 @@ public class UserMenuController {
     // --------------------------
     // BOTONES PRINCIPALES
     // --------------------------
-
     @FXML
-    private void irAMiPerfil(javafx.event.ActionEvent event) {
-        cambiarVista("/co/edu/poli/views/MiPerfilView.fxml", (Node) event.getSource());
+    private void irMiPerfil(javafx.event.ActionEvent event) {
+        cambiarVista("/co/edu/poli/view/MiPerfilView.fxml", (Node) event.getSource());
     }
 
     @FXML
-    private void irACarrito(javafx.event.ActionEvent event) {
-        cambiarVista("/co/edu/poli/views/CarritoView.fxml", (Node) event.getSource());
+    private void irCarrito(javafx.event.ActionEvent event) {
+        cambiarVista("/co/edu/poli/view/CarritoView.fxml", (Node) event.getSource());
     }
 
     @FXML
-    private void irACatalogo(javafx.event.ActionEvent event) {
-        cambiarVista("/co/edu/poli/views/Catalogo.fxml", (Node) event.getSource());
+    private void irPlaylist(javafx.event.ActionEvent event) {
+        cambiarVista("/co/edu/poli/view/PlaylistView.fxml", (Node) event.getSource());
     }
 
     @FXML
-    private void irAPlaylist(javafx.event.ActionEvent event) {
-        cambiarVista("/co/edu/poli/views/PlaylistView.fxml", (Node) event.getSource());
+    private void irHistorial(javafx.event.ActionEvent event) {
+        cambiarVista("/co/edu/poli/view/HistorialComprasView.fxml", (Node) event.getSource());
     }
 
     @FXML
-    private void irAHistorialCompras(javafx.event.ActionEvent event) {
-        cambiarVista("/co/edu/poli/views/HistorialComprasView.fxml", (Node) event.getSource());
+    private void irCalificarProductos(javafx.event.ActionEvent event) {
+        cambiarVista("/co/edu/poli/view/CalificarProductoView.fxml", (Node) event.getSource());
     }
-
+    
     @FXML
-    private void irACalificarProductos(javafx.event.ActionEvent event) {
-        cambiarVista("/co/edu/poli/views/CalificarProductosView.fxml", (Node) event.getSource());
+    void onPlayList(javafx.event.ActionEvent event) {
+    	cambiarVista("/co/edu/poli/view/PlayListVUserView.fxml", (Node) event.getSource());
     }
 
     // --------------------------
     // CERRAR SESIÓN
     // --------------------------
-
     @FXML
     private void cerrarSesion(javafx.event.ActionEvent event) {
-        cambiarVista("/co/edu/poli/views/MainPage.fxml", (Node) event.getSource());
+        cambiarVista("/co/edu/poli/view/MainPage.fxml", (Node) event.getSource());
     }
 }
-

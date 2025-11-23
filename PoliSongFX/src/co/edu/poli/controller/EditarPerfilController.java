@@ -3,9 +3,13 @@ package co.edu.poli.controller;
 import co.edu.poli.model.usuario;
 import co.edu.poli.negocio.usuarioManager;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.Parent;
 
 public class EditarPerfilController {
 
@@ -33,11 +37,34 @@ public class EditarPerfilController {
                 txtContrasena.getText()
         );
 
-        ((Stage) txtNombre.getScene().getWindow()).close();
+        Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+        alerta.setTitle("Perfil actualizado");
+        alerta.setHeaderText(null);
+        alerta.setContentText("Perfil modificado correctamente ✅");
+        alerta.showAndWait();
+
+        volverAMiPerfil();
     }
 
     @FXML
     private void cancelar() {
-        ((Stage) txtNombre.getScene().getWindow()).close();
+        volverAMiPerfil();
+    }
+
+    private void volverAMiPerfil() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/edu/poli/view/MiPerfilView.fxml"));
+            Parent root = loader.load();
+
+            Stage nueva = new Stage();
+            nueva.setTitle("Mi Perfil");
+            nueva.setScene(new Scene(root));
+            nueva.show();
+
+            ((Stage) txtNombre.getScene().getWindow()).close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

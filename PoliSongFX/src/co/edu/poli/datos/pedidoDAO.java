@@ -139,4 +139,34 @@ public class pedidoDAO {
             System.out.println("Detalles: " + e.getMessage());
         }
     }
+    
+    public java.util.List<pedido> readPedidosUsuario(int idUsuario) {
+        java.util.List<pedido> lista = new java.util.ArrayList<>();
+
+        String sql = "SELECT * FROM pedido WHERE id_usuario = ? ORDER BY fecha DESC";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, idUsuario);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                lista.add(new pedido(
+                        rs.getInt("id_pedido"),
+                        rs.getInt("id_usuario"),
+                        rs.getDate("fecha"),
+                        rs.getString("estado")
+                ));
+            }
+
+            System.out.println("pedidoDAO -> readPedidosUsuario: " + lista.size() + " pedidos encontrados");
+
+        } catch (SQLException e) {
+            System.out.println("pedidoDAO -> readPedidosUsuario: Error");
+            System.out.println("Detalles: " + e.getMessage());
+        }
+
+        return lista;
+    }
 }

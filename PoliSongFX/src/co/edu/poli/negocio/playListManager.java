@@ -26,10 +26,8 @@ public class playListManager {
     /**
      * Crea una nueva playlist en la base de datos.
      */
-    public void crearPlayList(int idPlayList, String nombre, boolean publica, int idUsuario) {
-        playList p = new playList(idPlayList, idUsuario, nombre, publica);
-        playListDao.createPlayList(p);
-        System.out.println("playListManager -> crearPlayList: Playlist creada correctamente (" + nombre + ")");
+    public int crearPlayListReturnId(String nombre, boolean esPublica, int idUsuario) {
+        return playListDao.crearPlayListReturnId(nombre, esPublica, idUsuario);
     }
 
     /**
@@ -91,4 +89,10 @@ public class playListManager {
         playListDao.deletePlayList(idPlayList);
         System.out.println("playListManager -> eliminarPlayList: Playlist eliminada (ID: " + idPlayList + ")");
     }
+    
+ // En playListManager
+    public List<playList> getPlaylistsByUsuario(int idUsuario) {
+        return playListDao.readPlaylistsByUsuario(idUsuario);
+    }
+
 }

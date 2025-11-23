@@ -51,7 +51,6 @@ public class LoginViewController {
             Session.setSesion(u, "usuario");
 
             mensajeSesion.setText("Sesión iniciada como USUARIO");
-            abrirVentana("/application/UsuarioPage.fxml", event);
             return;
         }
 
@@ -62,7 +61,6 @@ public class LoginViewController {
             Session.setSesion(p, "proveedor");
 
             mensajeSesion.setText("Sesión iniciada como PROVEEDOR");
-            abrirVentana("/application/ProveedorPage.fxml", event);
             return;
         }
 
@@ -73,7 +71,6 @@ public class LoginViewController {
             Session.setSesion(a, "admin");
 
             mensajeSesion.setText("Sesión iniciada como ADMINISTRADOR");
-            abrirVentana("/application/AdminPage.fxml", event);
             return;
         }
 
@@ -112,20 +109,6 @@ public class LoginViewController {
     
     @FXML
     private void RegistroSesion(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/edu/poli/view/RegisterView.fxml"));
-            Parent root = loader.load();
-            Stage stage = new Stage();
-            stage.setTitle("Registro de Usuario");
-            stage.setScene(new Scene(root));
-            stage.show();
-
-            // Opcional: cerrar ventana anterior
-            ((Stage)((Node)event.getSource()).getScene().getWindow()).close();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Error al abrir RegistroView.fxml: " + e.getMessage());
-        }
+       abrirVentana("/co/edu/poli/view/RegisterView.fxml", event);
     }
 }

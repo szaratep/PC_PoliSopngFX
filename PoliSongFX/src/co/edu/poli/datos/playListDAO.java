@@ -2,6 +2,8 @@ package co.edu.poli.datos;
 
 import co.edu.poli.model.playList;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * DAO (Data Access Object) para la entidad {@link playList}.
@@ -21,24 +23,28 @@ public class playListDAO {
      * 
      * @param p Objeto {@link playList} con los datos de la playlist a crear.
      */
-    public void createPlayList(playList p) {
-        String sql = "INSERT INTO playlist (id_playlist, id_usuario, nombre, publica) VALUES (?, ?, ?, ?)";
+    public int crearPlayListReturnId(String nombre, boolean esPublica, int idUsuario) {
+        String sql = "INSERT INTO playlist (nombre, publica, id_usuario) VALUES (?, ?, ?)";
+        int idGenerado = -1;
 
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
-            stmt.setInt(1, p.getId_playlist());
-            stmt.setInt(2, p.getId_usuario());
-            stmt.setString(3, p.getNombre());
-            stmt.setBoolean(4, p.isPublica());
-
+            stmt.setString(1, nombre);
+            stmt.setBoolean(2, esPublica);
+            stmt.setInt(3, idUsuario);
             stmt.executeUpdate();
-            System.out.println("playListDAO -> createPlayList: Playlist creada correctamente");
+
+            ResultSet rs = stmt.getGeneratedKeys();
+            if (rs.next()) {
+                idGenerado = rs.getInt(1);
+            }
 
         } catch (SQLException e) {
-            System.out.println("playListDAO -> createPlayList: Error al crear playlist");
-            System.out.println("Detalles: " + e.getMessage());
+            System.out.println("playListDAO -> crearPlayListReturnId: " + e.getMessage());
         }
+
+        return idGenerado;
     }
 
     /**
@@ -132,4 +138,68 @@ public class playListDAO {
             System.out.println("Detalles: " + e.getMessage());
         }
     }
+    
+    /**
+     * Recupera la última playlist creada por un usuario específico.
+     * Se asume que el ID más alto corresponde a la última creada.
+     *
+     * @param idUsuario El ID del usuario.
+     * @return La playlist recién creada, o null si no existe.
+     */
+    public playList readPlayListUltimaCreada(int idUsuario) {
+        String sql = "SELECT * FROM playlist WHERE id_usuario = ? ORDER BY id_playlist DESC LIMIT 1";
+        playList pl = null;
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, idUsuario);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                pl = new playList(
+                        rs.getInt("id_playlist"),
+                        rs.getInt("id_usuario"),
+                        rs.getString("nombre"),
+                        rs.getBoolean("publica")
+                );
+            }
+
+        } catch (SQLException e) {
+            System.out.println("playListDAO -> readPlayListUltimaCreada: Error al leer playlist");
+            System.out.println("Detalles: " + e.getMessage());
+        }
+
+        return pl;
+    }
+    
+ // En playListDAO
+    public List<playList> readPlaylistsByUsuario(int idUsuario) {
+        List<playList> listas = new ArrayList<>();
+        String sql = "SELECT * FROM playlist WHERE id_usuario = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, idUsuario);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                playList p = new playList(
+                    rs.getInt("id_playlist"),
+                    rs.getInt("id_usuario"),
+                    rs.getString("nombre"),
+                    rs.getBoolean("publica")
+                );
+                listas.add(p);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("playListDAO -> readPlaylistsByUsuario: Error al leer playlists");
+            System.out.println("Detalles: " + e.getMessage());
+        }
+
+        return listas;
+    }
+
 }

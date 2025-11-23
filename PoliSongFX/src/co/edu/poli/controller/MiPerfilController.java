@@ -1,15 +1,20 @@
 package co.edu.poli.controller;
 
 import co.edu.poli.model.usuario;
-import co.edu.poli.negocio.usuarioManager;
+import co.edu.poli.negocio.Session;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
-import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 
-public class MiPerfilController {
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class MiPerfilController implements Initializable {
 
     @FXML private Label lblIdUsuario;
     @FXML private Label lblNombre;
@@ -18,28 +23,46 @@ public class MiPerfilController {
 
     private usuario usuarioLogueado;
 
-    public void setUsuario(usuario u) {
-        this.usuarioLogueado = u;
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
 
-        lblIdUsuario.setText(String.valueOf(u.getId_usuario()));
-        lblNombre.setText(u.getNombre());
-        lblCorreo.setText(u.getCorreo());
-        lblContrasena.setText(u.getContrasena());
+        // ✅ Obtener usuario desde Session
+        if (Session.haySesion()) {
+
+            Object obj = Session.getUsuarioActual();
+
+            if (obj instanceof usuario) {
+                usuarioLogueado = (usuario) obj;
+
+                lblIdUsuario.setText(String.valueOf(usuarioLogueado.getId_usuario()));
+                lblNombre.setText(usuarioLogueado.getNombre());
+                lblCorreo.setText(usuarioLogueado.getCorreo());
+                lblContrasena.setText(usuarioLogueado.getContrasena());
+            }
+
+        } else {
+            lblNombre.setText("Sin sesión");
+        }
     }
 
     @FXML
-    private void abrirEditarPerfil() {
+    private void abrirEditarPerfil(javafx.event.ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/edu/poli/view/EditarPerfilView.fxml"));
-            Scene scene = new Scene(loader.load());
+            Parent root = loader.load();
 
+            // ✅ obtener controlador y pasar el usuario
             EditarPerfilController controller = loader.getController();
             controller.setUsuario(usuarioLogueado);
 
-            Stage stage = new Stage();
-            stage.setTitle("Editar Perfil");
-            stage.setScene(scene);
-            stage.show();
+            Stage nueva = new Stage();
+            nueva.setTitle("Editar Perfil");
+            nueva.setScene(new Scene(root));
+            nueva.show();
+
+            // ✅ cerrar ventana actual
+            Stage actual = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+            actual.close();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -48,6 +71,30 @@ public class MiPerfilController {
 
     @FXML
     private void volverMenu(javafx.event.ActionEvent event) {
-        ((Stage)((Node)event.getSource()).getScene().getWindow()).close();
+        abrirVentana("/co/edu/poli/view/UserMenuView.fxml", event);
     }
+    
+    private void abrirVentana(String ruta, ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(ruta));
+            Parent root = loader.load();
+
+            Stage nueva = new Stage();
+            nueva.setTitle("PoliSong");
+            nueva.setScene(new Scene(root));
+            nueva.show();
+
+            // ✅ Cerrar solo la ventana actual
+            Stage actual = (Stage) ((javafx.scene.Node) event.getSource())
+                    .getScene()
+                    .getWindow();
+            actual.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Error al abrir ventana: " + ruta);
+        }
+    }
+
+
 }

@@ -1,125 +1,141 @@
 package co.edu.poli.controller;
 
-import co.edu.poli.model.playList;
+import co.edu.poli.datos.cancionDAO;
+import co.edu.poli.model.cancion;
 import co.edu.poli.negocio.playListManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
+import javafx.scene.Node;
+import javafx.event.ActionEvent;
+import java.io.IOException;
+import javafx.scene.Parent;
 
 public class PlaylistUserController {
 
-    @FXML private TextField txtIdPlaylist;
     @FXML private TextField txtNombre;
-    @FXML private TextField txtUsuarioId;
     @FXML private CheckBox chkPublica;
 
-    @FXML private TableView<Integer> tablaCanciones;
-    @FXML private TableColumn<Integer, Integer> colIdCancion;
+    @FXML private TableView<cancion> tablaTodasCanciones;
+    @FXML private TableColumn<cancion, Integer> colIdCancionSistema;
+    @FXML private TableColumn<cancion, String> colNombreCancionSistema;
+    @FXML private TableColumn<cancion, Double> colDuracionSistema;
 
-    private playListManager manager = new playListManager();
-    private ObservableList<Integer> cancionesObservable = FXCollections.observableArrayList();
+    @FXML private TableView<cancion> tablaCanciones;
+    @FXML private TableColumn<cancion, Integer> colIdCancion;
+    @FXML private TableColumn<cancion, String> colNombreCancion;
+    @FXML private TableColumn<cancion, Double> colDuracion;
+
+    private final cancionDAO cancionDao = new cancionDAO();
+    public final playListManager playListManager = new playListManager();
+    private int currentPlayListId = -1; // se asigna al crear o cargar una playlist
+
+    private ObservableList<cancion> todasCancionesList = FXCollections.observableArrayList();
+    private ObservableList<cancion> cancionesPlaylistList = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
-        colIdCancion.setCellValueFactory(
-            data -> new javafx.beans.property.SimpleIntegerProperty(data.getValue()).asObject()
-        );
+        // Configurar columnas tabla todas las canciones
+        colIdCancionSistema.setCellValueFactory(new PropertyValueFactory<>("id_cancion"));
+        colNombreCancionSistema.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+        colDuracionSistema.setCellValueFactory(new PropertyValueFactory<>("duracion"));
 
-        tablaCanciones.setItems(cancionesObservable);
+        // Configurar columnas tabla playlist
+        colIdCancion.setCellValueFactory(new PropertyValueFactory<>("id_cancion"));
+        colNombreCancion.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+        colDuracion.setCellValueFactory(new PropertyValueFactory<>("duracion"));
+
+        // Inicializar listas en tablas
+        tablaTodasCanciones.setItems(todasCancionesList);
+        tablaCanciones.setItems(cancionesPlaylistList);
+
+        // Cargar todas las canciones
+        cargarTodasCanciones();
     }
 
-    @FXML
-    private void onCargarPlaylist() {
-        int id = Integer.parseInt(txtIdPlaylist.getText());
-
-        playList p = manager.playListDao.readPlayList(id);
-
-        if (p == null) {
-            alert("No existe playlist con ese ID.");
-            return;
+    private void cargarTodasCanciones() {
+        todasCancionesList.clear();
+        try {
+            // Aquí deberías implementar un método real en cancionDAO para leer todas las canciones
+            // Temporal: cargamos solo una canción de ejemplo
+            cancion c = cancionDao.readCancion(1); 
+            if (c != null) {
+                todasCancionesList.add(c);
+            }
+        } catch (Exception e) {
+            System.out.println("Error cargando todas las canciones: " + e.getMessage());
         }
+    }
 
-        // Llenar datos
-        txtNombre.setText(p.getNombre());
-        txtUsuarioId.setText(String.valueOf(p.getId_usuario()));
-        chkPublica.setSelected(p.isPublica());
-
-        // Cargar canciones
-        cancionesObservable.setAll(manager.playlistCancionDao.getCancionesByPlaylist(id));
+    private void cargarCancionesPlaylist() {
+        cancionesPlaylistList.clear();
+        if (currentPlayListId != -1) {
+            for (Integer idCancion : playListManager.playlistCancionDao.getCancionesByPlaylist(currentPlayListId)) {
+                cancion c = cancionDao.readCancion(idCancion);
+                if (c != null) cancionesPlaylistList.add(c);
+            }
+        }
     }
 
     @FXML
     private void onCrearPlaylist() {
-        int id = Integer.parseInt(txtIdPlaylist.getText());
         String nombre = txtNombre.getText();
-        int idUsuario = Integer.parseInt(txtUsuarioId.getText());
-        boolean publica = chkPublica.isSelected();
+        boolean esPublica = chkPublica.isSelected();
+        int idUsuario = 1; // Cambia según el usuario logueado
 
-        manager.crearPlayList(id, nombre, publica, idUsuario);
-        alert("Playlist creada correctamente.");
-    }
-
-    @FXML
-    private void onActualizarPlaylist() {
-        int id = Integer.parseInt(txtIdPlaylist.getText());
-        int idUsuario = Integer.parseInt(txtUsuarioId.getText());
-        String nombre = txtNombre.getText();
-        boolean publica = chkPublica.isSelected();
-
-        manager.actualizarPlayList(id, idUsuario, nombre, publica);
-        alert("Playlist actualizada correctamente.");
+        currentPlayListId = playListManager.crearPlayListReturnId(nombre, esPublica, idUsuario);
+        cancionesPlaylistList.clear();
+        System.out.println("Playlist creada con ID " + currentPlayListId);
     }
 
     @FXML
     private void onAgregarCancion() {
-        TextInputDialog dialog = new TextInputDialog();
-        dialog.setHeaderText("Agregar Canción");
-        dialog.setContentText("ID de la canción:");
-
-        dialog.showAndWait().ifPresent(idStr -> {
-            int idCancion = Integer.parseInt(idStr);
-            int idPlaylist = Integer.parseInt(txtIdPlaylist.getText());
-
-            manager.agregarCancion(idPlaylist, idCancion);
-
-            cancionesObservable.add(idCancion);
-        });
+        cancion selected = tablaTodasCanciones.getSelectionModel().getSelectedItem();
+        if (selected != null && currentPlayListId != -1) {
+            playListManager.agregarCancion(currentPlayListId, selected.getId_cancion());
+            cargarCancionesPlaylist();
+        }
     }
 
     @FXML
     private void onEliminarCancion() {
-        Integer seleccion = tablaCanciones.getSelectionModel().getSelectedItem();
-
-        if (seleccion == null) {
-            alert("Seleccione una canción para eliminar.");
-            return;
+        cancion selected = tablaCanciones.getSelectionModel().getSelectedItem();
+        if (selected != null && currentPlayListId != -1) {
+            playListManager.eliminarCancion(currentPlayListId, selected.getId_cancion());
+            cargarCancionesPlaylist();
         }
+    }
 
-        int idPlaylist = Integer.parseInt(txtIdPlaylist.getText());
-        manager.eliminarCancion(idPlaylist, seleccion);
+    // ----------------- NUEVOS BOTONES -----------------
 
-        cancionesObservable.remove(seleccion);
+    @FXML
+    private void onVolver(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/edu/poli/view/UserMenuView.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            System.out.println("Error al volver a UserMenuView: " + e.getMessage());
+        }
     }
 
     @FXML
-    private void onEliminarPlaylist() {
-        int id = Integer.parseInt(txtIdPlaylist.getText());
-
-        manager.eliminarPlayList(id);
-        alert("Playlist eliminada correctamente.");
-
-        // Limpiar vista
-        txtNombre.clear();
-        txtUsuarioId.clear();
-        chkPublica.setSelected(false);
-        cancionesObservable.clear();
-    }
-
-    private void alert(String msg) {
-        Alert a = new Alert(Alert.AlertType.INFORMATION);
-        a.setHeaderText(null);
-        a.setContentText(msg);
-        a.show();
+    private void onVerPlaylists(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/edu/poli/view/UserPlaylistsView.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            System.out.println("Error al abrir UserPlaylistsView: " + e.getMessage());
+        }
     }
 }

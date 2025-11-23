@@ -2,6 +2,8 @@ package co.edu.poli.datos;
 
 import co.edu.poli.model.cancion;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * DAO (Data Access Object) para la entidad {@link cancion}.
@@ -85,11 +87,12 @@ public class cancionDAO {
 
             if (rs.next()) {
                 song = new cancion(
-                        rs.getString("nombre"),
-                        rs.getDouble("duracion"),
-                        rs.getDouble("precio"),
-                        rs.getDouble("tamano_mb")
+                    rs.getString("nombre"),
+                    rs.getDouble("duracion"),
+                    rs.getDouble("precio"),
+                    rs.getDouble("tamano_mb")
                 );
+                song.setId_cancion(rs.getInt("id_cancion")); // <- esto faltaba
                 System.out.println("cancionDAO -> readCancion: Cancion encontrada");
             } else {
                 System.out.println("cancionDAO -> readCancion: Cancion no existe");
@@ -159,4 +162,29 @@ public class cancionDAO {
             System.out.println("Detalles: " + e.getMessage());
         }
     }
+    
+    public List<cancion> readAllCanciones() {
+        List<cancion> lista = new ArrayList<>();
+        String sql = "SELECT * FROM cancion";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                cancion c = new cancion(
+                    rs.getString("nombre"),
+                    rs.getDouble("duracion"),
+                    rs.getDouble("precio"),
+                    rs.getDouble("tamano_mb")
+                );
+                c.setId_cancion(rs.getInt("id_cancion")); // importante
+                lista.add(c);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("cancionDAO -> readAllCanciones: " + e.getMessage());
+        }
+        return lista;
+    }
+
 }
