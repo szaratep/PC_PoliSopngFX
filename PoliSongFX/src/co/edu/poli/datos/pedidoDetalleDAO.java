@@ -23,23 +23,23 @@ public class pedidoDetalleDAO {
      * @param det Objeto {@link pedidoDetalle} con los datos del detalle a crear.
      */
     public void createPedDetalle(pedidoDetalle det) {
-        String sql = "INSERT INTO pedido_detalle (id_detalle, id_pedido, tipo_Producto, id_producto, cantidad, precio_unitario) VALUES (?, ?, ?, ?, ?, ?)";
+
+        String sql = "INSERT INTO pedido_detalle (id_pedido, tipo_Producto, id_producto, cantidad, precio_unitario) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setInt(1, det.getId_detalle());
-            stmt.setInt(2, det.getId_pedido());
-            stmt.setString(3, det.getTipo_Producto());
-            stmt.setInt(4, det.getId_producto());
-            stmt.setInt(5, det.getCantidad());
-            stmt.setDouble(6, det.getPrecio_unitario());
+            stmt.setInt(1, det.getId_pedido());
+            stmt.setString(2, det.getTipo_Producto());
+            stmt.setInt(3, det.getId_producto());
+            stmt.setInt(4, det.getCantidad());
+            stmt.setDouble(5, det.getPrecio_unitario());
 
             stmt.executeUpdate();
-            System.out.println("pedidoDetalleDAO -> createPedDetalle: Detalle de pedido creado correctamente");
+            System.out.println("pedidoDetalleDAO -> createPedDetalle: Detalle creado");
 
         } catch (SQLException e) {
-            System.out.println("pedidoDetalleDAO -> createPedDetalle: Error al crear detalle de pedido");
+            System.out.println("pedidoDetalleDAO -> createPedDetalle: Error");
             System.out.println("Detalles: " + e.getMessage());
         }
     }

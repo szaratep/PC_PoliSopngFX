@@ -21,24 +21,31 @@ public class pedidoDAO {
      * 
      * @param p Objeto {@link pedido} con los datos del pedido a crear.
      */
-    public void createPedido(pedido p) {
-        String sql = "INSERT INTO pedido (id_pedido, id_usuario, fecha, estado) VALUES (?, ?, ?, ?)";
+    public int createPedido(pedido p) {
+        String sql = "INSERT INTO pedido (id_usuario, fecha, estado) VALUES (?, ?, ?)";
 
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
-            stmt.setInt(1, p.getId_pedido());
-            stmt.setInt(2, p.getId_usuario());
-            stmt.setDate(3, new java.sql.Date(p.getFecha().getTime()));
-            stmt.setString(4, p.getEstado());
+            stmt.setInt(1, p.getId_usuario());
+            stmt.setDate(2, new java.sql.Date(p.getFecha().getTime()));
+            stmt.setString(3, p.getEstado());
 
             stmt.executeUpdate();
-            System.out.println("pedidoDAO -> createPedido: Pedido creado correctamente");
+
+            ResultSet rs = stmt.getGeneratedKeys();
+            if (rs.next()) {
+                int idGenerado = rs.getInt(1);
+                System.out.println("pedidoDAO -> createPedido: Pedido creado ID=" + idGenerado);
+                return idGenerado;
+            }
 
         } catch (SQLException e) {
-            System.out.println("pedidoDAO -> createPedido: Error al crear pedido");
+            System.out.println("pedidoDAO -> createPedido: Error");
             System.out.println("Detalles: " + e.getMessage());
         }
+
+        return -1;
     }
 
     /**

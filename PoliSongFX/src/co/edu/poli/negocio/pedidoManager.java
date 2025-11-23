@@ -24,11 +24,33 @@ public class pedidoManager {
     /**
      * Crea un nuevo pedido en la base de datos.
      */
-    public void crearPedido(int idPedido, int idUsuario, String estado) {
-        pedido p = new pedido(idPedido, idUsuario, new java.sql.Date(System.currentTimeMillis()), estado);
-        pedidoDao.createPedido(p);
-        System.out.println("pedidoManager -> crearPedido: Pedido creado correctamente (ID Usuario: " + idUsuario + ")");
+    public int crearPedido(int idUsuario, String estado) {
+
+        pedido p = new pedido(0, idUsuario, new java.sql.Date(System.currentTimeMillis()), estado);
+
+        int idPedido = pedidoDao.createPedido(p);
+
+        if (idPedido <= 0) {
+            System.out.println("pedidoManager -> crearPedido: ERROR");
+        } else {
+            System.out.println("pedidoManager -> crearPedido: Pedido ID=" + idPedido);
+        }
+
+        return idPedido;
     }
+
+    public void agregarDetalleAuto(
+            int idPedido,
+            String tipoProducto,
+            int idProducto,
+            int cantidad,
+            double precioUnitario) {
+
+        pedidoDetalle det = new pedidoDetalle(0, idPedido, tipoProducto, idProducto, cantidad, precioUnitario);
+
+        detalleDao.createPedDetalle(det);
+    }
+
 
     /**
      * Agrega un detalle al pedido.

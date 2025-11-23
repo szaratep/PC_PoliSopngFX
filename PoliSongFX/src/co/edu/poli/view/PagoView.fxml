@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="co.edu.poli.controller.PagoController">
+
+    <top>
+        <HBox spacing="15" alignment="CENTER_LEFT">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+
+            <Label text="Confirmación de Pago"
+                   style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+
+            <Label fx:id="lblPedidoId"
+                   style="-fx-font-size: 16px; -fx-text-fill: #555;"
+                   text="Pedido # -"/>
+        </HBox>
+    </top>
+
+    <center>
+        <VBox spacing="20" alignment="CENTER">
+            <padding>
+                <Insets top="20" right="10" bottom="20" left="10"/>
+            </padding>
+
+            <Label fx:id="lblTotal"
+                   text="Total: $0"
+                   style="-fx-font-size: 22px; -fx-font-weight: bold;"/>
+        </VBox>
+    </center>
+
+    <bottom>
+        <HBox alignment="CENTER_RIGHT" spacing="10">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+
+            <Button fx:id="btnConfirmar" text="Confirmar Pago" onAction="#onConfirmarPago"/>
+            <Button fx:id="btnCancelar" text="Cancelar" onAction="#onCancelar"/>
+
+        </HBox>
+    </bottom>
+
+</BorderPane>
