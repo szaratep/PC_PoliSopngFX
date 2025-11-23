@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="20" alignment="CENTER"
+      xmlns="http://javafx.com/javafx/8"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="co.edu.poli.controller.GestionProductosController"
+      stylesheets="@../style/menu.css">
+
+    <Label text="Gestión de Productos (Vinilos)"
+           style="-fx-font-size: 26px; -fx-font-weight: bold;" />
+
+    <TableView fx:id="tablaProductos" prefWidth="750" prefHeight="350">
+        <columns>
+            <TableColumn fx:id="colId" text="ID" prefWidth="80"/>
+            <TableColumn fx:id="colNombre" text="Nombre" prefWidth="200"/>
+            <TableColumn fx:id="colArtista" text="Artista" prefWidth="200"/>
+            <TableColumn fx:id="colPrecio" text="Precio" prefWidth="120"/>
+            <TableColumn fx:id="colGenero" text="Género" prefWidth="150"/>
+        </columns>
+    </TableView>
+
+    <HBox spacing="20" alignment="CENTER">
+        <Button text="Eliminar Producto" onAction="#eliminarProducto" prefWidth="200"/>
+        <Button text="Volver" onAction="#volverMenu" prefWidth="200"/>
+    </HBox>
+
+</VBox>
+
