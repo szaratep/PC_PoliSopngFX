@@ -155,7 +155,7 @@ public class MainPageController implements Initializable {
                     abrirVentana("/co/edu/poli/view/ProveedorMenuView.fxml", source);
                     break;
                 case "admin":
-                    abrirVentana("/co/edu/poli/view/AdministradorMenuView.fxml", source);
+                    abrirVentana("/co/edu/poli/view/AdminMenuView.fxml", source);
                     break;
             }
         }
