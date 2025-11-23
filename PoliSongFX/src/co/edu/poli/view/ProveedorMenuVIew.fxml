@@ -1,74 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox spacing="20" alignment="CENTER"
-      xmlns="http://javafx.com/javafx/8"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="co.edu.poli.controller.ProveedorMenuController"
-      stylesheets="@../style/menu.css">
+<BorderPane fx:id="root" stylesheets="@../style/menu.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.edu.poli.controller.ProveedorMenuController">
 
-    <!-- TÍTULO -->
-    <Label text="Bienvenido Proveedor"
-           style="-fx-font-size: 26px; -fx-font-weight: bold;" />
+    <!-- ENCABEZADO -->
+    <top>
+        <HBox alignment="CENTER_LEFT" prefHeight="60" style="-fx-background-color: #1a1a1a; -fx-padding: 15;">
+            <Label style="-fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;" text="Menú del Proveedor" />
+        </HBox>
+    </top>
 
-    <!-- PROVEEDOR ACTUAL -->
-    <Label fx:id="labelProveedorNombre"
-           text="Proveedor: ---"
-           style="-fx-font-size: 16px;" />
+    <!-- CENTRO: BOTONES -->
+    <center>
+        <VBox alignment="CENTER" prefWidth="350" spacing="20">
 
-    <!-- BOTONES -->
-    <GridPane hgap="20" vgap="20">
-        <padding>
-            <Insets top="10" left="10" right="10" bottom="10"/>
-        </padding>
+            <!-- Nombre del proveedor activo -->
+            <Label fx:id="labelProveedorNombre" style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Proveedor: ---" />
+            <Button fx:id="btnMiPerfil" onAction="#abrirPerfil" prefHeight="60" prefWidth="250" text="Mi Perfil" />
+            <Button fx:id="btnRegistrarProducto" onAction="#abrirRegistrarProducto" prefHeight="60" prefWidth="250" text="Registrar Producto" />
 
-        <!-- Inventario -->
-        <Button text="Gestionar Inventario"
-                fx:id="btnInventario"
-                onAction="#abrirGestionInventario"
-                GridPane.rowIndex="0" GridPane.columnIndex="0"
-                prefWidth="200" prefHeight="60"/>
+            <Button fx:id="btnInventario" onAction="#abrirGestionInventario" prefHeight="60" prefWidth="250" text="Ver Catalogo" />
+        </VBox>
+    </center>
 
-        <!-- Pedidos -->
-        <Button text="Pedidos Pendientes"
-                fx:id="btnPedidosPendientes"
-                onAction="#abrirPedidosPendientes"
-                GridPane.rowIndex="0" GridPane.columnIndex="1"
-                prefWidth="200" prefHeight="60"/>
+    <!-- PIE DE PÁGINA -->
+    <bottom>
+        <HBox alignment="CENTER" style="-fx-padding: 20;">
+            <Button fx:id="btnCerrarSesion" onAction="#cerrarSesion" prefHeight="50" prefWidth="200" style="-fx-background-color: #d9534f; -fx-text-fill: white;" text="Cerrar Sesión" />
+        </HBox>
+    </bottom>
 
-        <!-- Perfil -->
-        <Button text="Mi Perfil"
-                fx:id="btnMiPerfil"
-                onAction="#abrirPerfil"
-                GridPane.rowIndex="1" GridPane.columnIndex="0"
-                prefWidth="200" prefHeight="60"/>
-
-        <!-- Registrar producto -->
-        <Button text="Registrar Producto"
-                fx:id="btnRegistrarProducto"
-                onAction="#abrirRegistrarProducto"
-                GridPane.rowIndex="1" GridPane.columnIndex="1"
-                prefWidth="200" prefHeight="60"/>
-
-        <!-- Reportes -->
-        <Button text="Reportes"
-                fx:id="btnReportes"
-                onAction="#abrirReportes"
-                GridPane.rowIndex="2" GridPane.columnIndex="0"
-                prefWidth="200" prefHeight="60"/>
-
-        <!-- Cerrar sesión -->
-        <Button text="Cerrar Sesión"
-                fx:id="btnCerrarSesion"
-                onAction="#cerrarSesion"
-                GridPane.rowIndex="2" GridPane.columnIndex="1"
-                prefWidth="200" prefHeight="60"
-                style="-fx-background-color: #d9534f; -fx-text-fill: white;"/>
-    </GridPane>
-
-</VBox>
+</BorderPane>
