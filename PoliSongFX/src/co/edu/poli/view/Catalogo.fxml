@@ -10,7 +10,10 @@
 
     <!-- TITULO -->
     <top>
-        <HBox alignment="CENTER" padding="20">
+        <HBox alignment="CENTER">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
             <Label text="Catálogo de Productos"
                    style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
         </HBox>
@@ -18,7 +21,10 @@
 
     <!-- TABLA -->
     <center>
-        <VBox spacing="10" padding="20">
+        <VBox spacing="10">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
             <TableView fx:id="tablaProductos">
                 <columns>
                     <TableColumn fx:id="colNombre" text="Nombre" prefWidth="200"/>
@@ -31,7 +37,10 @@
 
     <!-- BOTONES -->
     <bottom>
-        <HBox spacing="15" padding="20" alignment="CENTER">
+        <HBox spacing="15" alignment="CENTER">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
             <Button text="Agregar al Carrito" onAction="#agregarCarrito"/>
             <Button text="Actualizar" onAction="#refrescar"/>
             <Button text="Volver" onAction="#volverMenu"/>
