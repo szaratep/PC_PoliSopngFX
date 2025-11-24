@@ -108,11 +108,9 @@ public class PagoController implements Initializable {
 
     private void registrarPedido() {
 
-        pedidoM.crearPedido(idUsuario, "Pagado");
+        int idPedido = pedidoM.crearPedido(idUsuario, "Pagado"); // ✅ obtener ID real del pedido
 
         List<carritoItem> itemsCarrito = carritoM.listarItems(idUsuario);
-
-        int idDetalle = 1;
 
         for (carritoItem item : itemsCarrito) {
 
@@ -126,8 +124,8 @@ public class PagoController implements Initializable {
                 idProducto = item.getId_mp3();
 
             pedidoM.agregarDetalle(
-                    idDetalle++,
-                    idUsuario,
+                    0,                   // ✅ dejar que la BD auto-incremente
+                    idPedido,            // ✅ FK correcta
                     item.getTipo_producto(),
                     idProducto,
                     item.getCantidad(),

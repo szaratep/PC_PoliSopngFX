@@ -14,14 +14,15 @@
         <Label text="Historial de Compras" style="-fx-font-size: 26px; -fx-font-weight: bold;"/>
 
         <TableView fx:id="tablaHistorial" prefHeight="350">
-            <columns>
-                <TableColumn text="ID Compra" prefWidth="120"/>
-                <TableColumn text="Producto" prefWidth="180"/>
-                <TableColumn text="Cantidad" prefWidth="100"/>
-                <TableColumn text="Precio Total" prefWidth="120"/>
-                <TableColumn text="Fecha" prefWidth="150"/>
-            </columns>
-        </TableView>
+    <columns>
+        <TableColumn fx:id="colIdPedido" text="ID Compra" prefWidth="120"/>
+        <TableColumn fx:id="colTipo" text="Producto" prefWidth="180"/>
+        <TableColumn fx:id="colCantidad" text="Cantidad" prefWidth="100"/>
+        <TableColumn fx:id="colPrecio" text="Precio Total" prefWidth="120"/>
+        <TableColumn fx:id="colFecha" text="Fecha" prefWidth="150"/>
+    </columns>
+</TableView>
+
 
         <Button text="Volver al Menú" onAction="#volverMenu"
                 style="-fx-font-size: 16px; -fx-padding: 10 20;"/>
