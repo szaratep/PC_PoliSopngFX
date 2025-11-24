@@ -5,6 +5,7 @@ import co.edu.poli.model.proveedor;
 import co.edu.poli.model.administrador;
 import co.edu.poli.negocio.usuarioManager;
 import co.edu.poli.negocio.proveedorManager;
+import co.edu.poli.negocio.Session;
 import co.edu.poli.negocio.adminManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -54,11 +55,28 @@ public class EditarPerfilController {
 
     @FXML
     private void guardarCambios() {
+
         if (usuarioLogueado instanceof usuario u) {
             usuarioMgr.actualizarUsuario(u.getId_usuario(), txtNombre.getText(), txtCorreo.getText(), txtContrasena.getText());
 
+            // Actualizar objeto en memoria
+            u.setNombre(txtNombre.getText());
+            u.setCorreo(txtCorreo.getText());
+            u.setContrasena(txtContrasena.getText());
+
+            // Actualizar sesión
+            Session.setSesion(u, "usuario");
+
         } else if (usuarioLogueado instanceof proveedor p) {
             proveedorMgr.actualizarProveedor(p.getId_proveedor(), txtNombre.getText(), txtCorreo.getText(), txtContrasena.getText(), 0);
+
+            // Actualizar objeto en memoria
+            p.setNombre(txtNombre.getText());
+            p.setCorreo(txtCorreo.getText());
+            p.setContrasena(txtContrasena.getText());
+
+            // Actualizar sesión
+            Session.setSesion(p, "proveedor");
 
         } else if (usuarioLogueado instanceof administrador a) {
             Alert alerta = new Alert(Alert.AlertType.WARNING);
@@ -77,6 +95,7 @@ public class EditarPerfilController {
 
         volverAMiPerfil();
     }
+
 
     @FXML
     private void cancelar() {
