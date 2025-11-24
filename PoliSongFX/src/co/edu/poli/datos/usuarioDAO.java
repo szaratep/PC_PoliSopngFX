@@ -78,6 +78,42 @@ public class usuarioDAO {
 
         return u;
     }
+    
+    public usuario readUsuario(String correo, String pass) {
+        String sql = """
+            SELECT u.id_usuario, u.nombre, u.contrasena, c.correo
+            FROM usuario u
+            INNER JOIN correo c ON u.correo_id = c.id_correo
+            WHERE c.correo = ? AND u.contrasena = ?
+        """;
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, correo);
+            stmt.setString(2, pass);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                System.out.println("usuarioDAO -> readUsuario: Usuario encontrado");
+                return new usuario(
+                        rs.getInt("id_usuario"),
+                        rs.getString("nombre"),
+                        rs.getString("correo"),
+                        rs.getString("contrasena")
+                );
+            } else {
+                System.out.println("usuarioDAO -> readUsuario: Usuario no existe");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("usuarioDAO -> readUsuario ERROR: " + e.getMessage());
+        }
+
+        return null;
+    }
+
 
     public void updateUsuario(usuario u) {
         String findCorreoSQL = "SELECT id_correo FROM correo WHERE correo = ?";

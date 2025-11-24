@@ -80,6 +80,43 @@ public class proveedorDAO {
 
         return p;
     }
+    
+    public proveedor readProveedor(String correo, String pass) {
+        String sql = """
+            SELECT p.id_proveedor, p.nombre, p.contrasena, p.calificaciones, c.correo
+            FROM proveedor p
+            INNER JOIN correo c ON p.correo_id = c.id_correo
+            WHERE c.correo = ? AND p.contrasena = ?
+        """;
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, correo);
+            stmt.setString(2, pass);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                System.out.println("proveedorDAO -> readProveedor: Proveedor encontrado");
+                return new proveedor(
+                        rs.getInt("id_proveedor"),
+                        rs.getString("nombre"),
+                        rs.getString("correo"),
+                        rs.getString("contrasena"),
+                        rs.getInt("calificaciones")
+                );
+            } else {
+                System.out.println("proveedorDAO -> readProveedor: Proveedor no existe");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("proveedorDAO -> readProveedor ERROR: " + e.getMessage());
+        }
+
+        return null;
+    }
+
 
     public void updateProveedor(proveedor p) {
         String findCorreoSQL = "SELECT id_correo FROM correo WHERE correo = ?";

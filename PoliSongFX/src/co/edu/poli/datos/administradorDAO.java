@@ -97,6 +97,45 @@ public class administradorDAO {
 
         return admin;
     }
+    
+    public administrador readAdmin(String correo, String contrasena) {
+        String sql = """
+            SELECT a.id_admin, a.nombre, a.contrasena, c.correo
+            FROM administrador a
+            INNER JOIN correo c ON a.correo_id = c.id_correo
+            WHERE c.correo = ? AND a.contrasena = ?
+        """;
+
+        administrador admin = null;
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, correo);
+            stmt.setString(2, contrasena);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                admin = new administrador(
+                        rs.getInt("id_admin"),
+                        rs.getString("nombre"),
+                        rs.getString("correo"),
+                        rs.getString("contrasena")
+                );
+                System.out.println("administradorDAO -> readAdmin(correo,pass): Administrador encontrado");
+            } else {
+                System.out.println("administradorDAO -> readAdmin(correo,pass): NO coincide correo y contraseña");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("administradorDAO -> readAdmin(correo,pass): Error");
+            System.out.println("Detalles: " + e.getMessage());
+        }
+
+        return admin;
+    }
+
 
     /**
      * Actualiza los datos de un administrador existente.

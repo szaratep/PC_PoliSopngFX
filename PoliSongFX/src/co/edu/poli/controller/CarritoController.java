@@ -125,20 +125,22 @@ public class CarritoController {
         // MP3
         if (tipo.equalsIgnoreCase("MP3")) {
 
-            // si no tiene id_cancion evitar el NPE
             if (item.getId_cancion() == null) {
-                return 2000; // solo costo de MP3
+                return 2000;
             }
 
-            cancionDAO cdao = new cancionDAO();
-            cancion c = cdao.readCancion(item.getId_cancion());
-
+            cancion c = cancionDao.readCancion(item.getId_cancion());
             return (c != null ? c.getPrecio() : 0) + 2000;
+        }
+
+        // ✅ CANCIÓN (ESTO FALTABA)
+        if (tipo.equalsIgnoreCase("Canción") || tipo.equalsIgnoreCase("Cancion")) {
+            cancion c = cancionDao.readCancion(item.getId_cancion());
+            return (c != null ? c.getPrecio() : 0);
         }
 
         return 0;
     }
-
 
     private void calcularTotal() {
         double total = 0;

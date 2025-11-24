@@ -49,7 +49,6 @@ public class LoginViewController {
 
             usuario u = buscar.buscarUsuarioPorCorreo(correo); // USANDO BUSQUEDA MANAGER
             Session.setSesion(u, "usuario");
-
             mensajeSesion.setText("Sesión iniciada como USUARIO");
             return;
         }

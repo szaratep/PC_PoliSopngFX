@@ -46,6 +46,7 @@ public class MainPageController implements Initializable {
     private final viniloDAO viniloDao = new viniloDAO();
     private final discoMP3DAO discomp3Dao = new discoMP3DAO();
     private final carritoManager manager = new carritoManager();
+    private final cancionDAO cancionDao = new cancionDAO();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -63,18 +64,27 @@ public class MainPageController implements Initializable {
     private void cargarProductos() {
         ObservableList<Producto> productos = FXCollections.observableArrayList();
 
+        // VINILOS
         List<vinilo> vinilos = viniloDao.listarVinilos();
         for (vinilo v : vinilos) {
             productos.add(new Producto(v.getNombre(), "Vinilo", v.getPrecio()));
         }
 
+        // MP3
         List<discoMP3> mp3s = discomp3Dao.listarDiscosMp3();
         for (discoMP3 m : mp3s) {
             productos.add(new Producto(m.getNombre(), "MP3", 0.0));
         }
 
+        // ✅ CANCIONES
+        List<cancion> canciones = cancionDao.readAllCanciones();
+        for (cancion c : canciones) {
+            productos.add(new Producto(c.getNombre(), "Canción", c.getPrecio()));
+        }
+
         tablaProductos.setItems(productos);
     }
+
 
     private void actualizarBotonLogin() {
         if (Session.haySesion()) {
@@ -197,6 +207,14 @@ public class MainPageController implements Initializable {
                     if (m.getNombre().equals(seleccionado.getNombre())) {
                         manager.agregarMP3(0, idCarrito, m.getId_MP3(), 1);
                         System.out.println("MP3 agregado: " + m.getNombre());
+                        break;
+                    }
+                }
+            }else if (seleccionado.getTipo().equals("Canción")) {
+                for (cancion c : cancionDao.readAllCanciones()) {
+                    if (c.getNombre().equals(seleccionado.getNombre())) {
+                        manager.agregarCancion(0, idCarrito, c.getId_cancion(), 1);
+                        System.out.println("Canción agregada: " + c.getNombre());
                         break;
                     }
                 }
