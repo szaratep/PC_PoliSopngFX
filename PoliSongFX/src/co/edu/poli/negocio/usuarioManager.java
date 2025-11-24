@@ -1,5 +1,7 @@
 package co.edu.poli.negocio;
 
+import java.util.List;
+
 import co.edu.poli.datos.*;
 import co.edu.poli.model.*;
 
@@ -116,4 +118,9 @@ public class usuarioManager {
             System.out.println("Detalles: " + e.getMessage());
         }
     }
+    
+    public List<usuario> obtenerUsuarios() {
+        return usuarioDao.listarUsuarios();
+    }
+
 }

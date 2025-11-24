@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  * Lógica de negocio para la gestión de proveedores.
@@ -66,47 +67,7 @@ public class proveedorManager {
             System.out.println("proveedorManager -> verProveedor: No existe el proveedor con ID " + idProveedor);
         }
     }
-
-    /**
-     * Lista los pedidos con estado "Pendiente".
-     * (Esta consulta es especial, así que se mantiene SQL directa controlada aquí).
-     */
-    public void verPedidosPendientes() {
-        System.out.println("---- LISTA DE PEDIDOS PENDIENTES ----");
-
-        String sql = """
-            SELECT pd.id_pedido, pd.id_detalle, pd.tipo_producto, pd.id_producto, pd.cantidad, pd.precio_unitario
-            FROM pedido_detalle pd
-            INNER JOIN pedido p ON pd.id_pedido = p.id_pedido
-            WHERE p.estado = 'Pendiente'
-        """;
-
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-
-            boolean hayResultados = false;
-            while (rs.next()) {
-                hayResultados = true;
-                System.out.printf(
-                        "Pedido ID: %d | Detalle ID: %d | Tipo: %s | Producto ID: %d | Cantidad: %d | Precio: %.2f%n",
-                        rs.getInt("id_pedido"),
-                        rs.getInt("id_detalle"),
-                        rs.getString("tipo_producto"),
-                        rs.getInt("id_producto"),
-                        rs.getInt("cantidad"),
-                        rs.getDouble("precio_unitario")
-                );
-            }
-
-            if (!hayResultados) {
-                System.out.println("No hay pedidos pendientes en este momento.");
-            }
-
-        } catch (SQLException e) {
-            System.err.println("Error al listar pedidos pendientes: " + e.getMessage());
-        }
-    }
+    
 
     /**
      * Actualiza el inventario de un vinilo.
@@ -131,4 +92,10 @@ public class proveedorManager {
             System.err.println("Error al actualizar inventario de vinilo: " + e.getMessage());
         }
     }
+    
+    public List<proveedor> obtenerProveedores() {
+        return proveedorDao.listarProveedores();
+    }
+
+
 }

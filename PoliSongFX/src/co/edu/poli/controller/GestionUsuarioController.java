@@ -1,109 +1,137 @@
 package co.edu.poli.controller;
 
-import java.io.IOException;
-
-import co.edu.poli.negocio.usuarioManager;
-import co.edu.poli.model.usuario;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
+import co.edu.poli.negocio.*;
+import co.edu.poli.model.usuario;
+import co.edu.poli.model.proveedor;
+
+import java.io.IOException;
+import java.util.List;
 
 public class GestionUsuarioController {
 
-    @FXML
-    private TableView<usuario> tablaUsuarios;
+    @FXML private TableView<UnifiedUsuario> tablaUsuarios;
+    @FXML private TableColumn<UnifiedUsuario, Integer> colId;
+    @FXML private TableColumn<UnifiedUsuario, String> colNombre;
+    @FXML private TableColumn<UnifiedUsuario, String> colCorreo;
+    @FXML private TableColumn<UnifiedUsuario, String> colRol;
 
-    @FXML
-    private TableColumn<usuario, Integer> colId;
-
-    @FXML
-    private TableColumn<usuario, String> colNombre;
-
-    @FXML
-    private TableColumn<usuario, String> colCorreo;
-
-    @FXML
-    private TableColumn<usuario, String> colRol;
-
-    @FXML
-    private TableColumn<usuario, String> colDireccion;
-
-    private usuarioManager usuarioManager = new usuarioManager();
+    private usuarioManager usuarioMgr = new usuarioManager();
+    private proveedorManager proveedorMgr = new proveedorManager();
+    private ObservableList<UnifiedUsuario> listaUsuarios = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
-        colId.setCellValueFactory(new PropertyValueFactory<>("idUsuario"));
-        colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
-        colCorreo.setCellValueFactory(new PropertyValueFactory<>("correo"));
-        colRol.setCellValueFactory(new PropertyValueFactory<>("rol"));
-        colDireccion.setCellValueFactory(new PropertyValueFactory<>("direccion"));
+        colId.setCellValueFactory(data -> data.getValue().idProperty().asObject());
+        colNombre.setCellValueFactory(data -> data.getValue().nombreProperty());
+        colCorreo.setCellValueFactory(data -> data.getValue().correoProperty());
+        colRol.setCellValueFactory(data -> data.getValue().rolProperty());
 
         cargarUsuarios();
     }
 
     private void cargarUsuarios() {
-        ObservableList<usuario> lista =
-                FXCollections.observableArrayList(usuarioManager.listar());
-        tablaUsuarios.setItems(lista);
-    }
+        listaUsuarios.clear();
 
-    @FXML
-    private void abrirRegistrarUsuario() {
-        cambiarVista("/co/edu/poli/view/RegistrarUsuario.fxml");
+        List<usuario> usuarios = usuarioMgr.obtenerUsuarios();
+        for (usuario u : usuarios) {
+            listaUsuarios.add(new UnifiedUsuario(
+                    u.getId_usuario(),
+                    u.getNombre(),
+                    u.getCorreo(),
+                    "Usuario"
+            ));
+        }
+
+        List<proveedor> proveedores = proveedorMgr.obtenerProveedores();
+        for (proveedor p : proveedores) {
+            listaUsuarios.add(new UnifiedUsuario(
+                    p.getId_proveedor(),
+                    p.getNombre(),
+                    p.getCorreo(),
+                    "Proveedor"
+            ));
+        }
+
+        tablaUsuarios.setItems(listaUsuarios);
     }
 
     @FXML
     private void eliminarUsuario() {
-        usuario seleccionado = tablaUsuarios.getSelectionModel().getSelectedItem();
+        UnifiedUsuario seleccionado = tablaUsuarios.getSelectionModel().getSelectedItem();
 
         if (seleccionado == null) {
-            mostrarAlerta("Debe seleccionar un usuario para eliminar.");
+            Alert alerta = new Alert(Alert.AlertType.WARNING, "Seleccione un usuario.", ButtonType.OK);
+            alerta.showAndWait();
             return;
         }
 
-        Alert confirm = new Alert(
-                Alert.AlertType.CONFIRMATION,
-                "¿Eliminar usuario permanentemente?",
-                ButtonType.YES, ButtonType.NO
-        );
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Confirmar Eliminación");
+        dialog.setHeaderText("Para eliminar este usuario escriba: ELIMINAR");
+        dialog.setContentText("Ingrese confirmación:");
 
-        confirm.showAndWait();
+        dialog.showAndWait().ifPresent(text -> {
+            if (!text.equalsIgnoreCase("ELIMINAR")) {
+                Alert alerta = new Alert(Alert.AlertType.ERROR, "Confirmación incorrecta.", ButtonType.OK);
+                alerta.showAndWait();
+                return;
+            }
 
-        if (confirm.getResult() == ButtonType.YES) {
-            usuarioManager.eliminar(seleccionado.getIdUsuario());
+            if (seleccionado.getRol().equals("Usuario")) {
+                usuarioMgr.eliminarUsuario(seleccionado.getId());
+            } else {
+                proveedorMgr.eliminarProveedor(seleccionado.getId());
+            }
+
             cargarUsuarios();
-        }
+
+            Alert alertaOk = new Alert(Alert.AlertType.INFORMATION, "Usuario eliminado correctamente.", ButtonType.OK);
+            alertaOk.showAndWait();
+        });
     }
 
     @FXML
     private void volverMenu() {
-        cambiarVista("/co/edu/poli/view/AdminMenu.fxml");
-    }
-
-    private void cambiarVista(String ruta) {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource(ruta));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/edu/poli/view/AdminMenuView.fxml"));
             Stage stage = (Stage) tablaUsuarios.getScene().getWindow();
-            stage.setScene(new Scene(root));
+            stage.setScene(new Scene(loader.load()));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void mostrarAlerta(String msg) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setHeaderText(null);
-        alert.setContentText(msg);
-        alert.showAndWait();
+    // Clase wrapper
+    public static class UnifiedUsuario {
+        private javafx.beans.property.IntegerProperty id;
+        private javafx.beans.property.StringProperty nombre;
+        private javafx.beans.property.StringProperty correo;
+        private javafx.beans.property.StringProperty rol;
+
+        public UnifiedUsuario(int id, String nombre, String correo, String rol) {
+            this.id = new javafx.beans.property.SimpleIntegerProperty(id);
+            this.nombre = new javafx.beans.property.SimpleStringProperty(nombre);
+            this.correo = new javafx.beans.property.SimpleStringProperty(correo);
+            this.rol = new javafx.beans.property.SimpleStringProperty(rol);
+        }
+
+        public int getId() { return id.get(); }
+        public javafx.beans.property.IntegerProperty idProperty() { return id; }
+
+        public String getNombre() { return nombre.get(); }
+        public javafx.beans.property.StringProperty nombreProperty() { return nombre; }
+
+        public String getCorreo() { return correo.get(); }
+        public javafx.beans.property.StringProperty correoProperty() { return correo; }
+
+        public String getRol() { return rol.get(); }
+        public javafx.beans.property.StringProperty rolProperty() { return rol; }
     }
 }
-

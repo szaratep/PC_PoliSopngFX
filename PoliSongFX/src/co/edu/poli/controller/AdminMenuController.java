@@ -113,13 +113,13 @@ public class AdminMenuController {
     
     @FXML
     private void abrirGestionUsuarios() {
-        /*try {
+        try {
             // Cerrar la ventana actual
             Stage stageActual = (Stage) btnGestionUsuarios.getScene().getWindow();
             stageActual.close();
 
             // Abrir ventana de gestión de usuarios (pendiente implementar FXML)
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/edu/poli/view/GestionarUsuariosView.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/edu/poli/view/GestionUsuarios.fxml"));
             Parent root = loader.load();
 
             Stage stage = new Stage();
@@ -129,7 +129,7 @@ public class AdminMenuController {
 
         } catch (IOException e) {
             e.printStackTrace();
-        }*/
+        }
     }
 
     @FXML

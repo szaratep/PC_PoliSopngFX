@@ -2,6 +2,8 @@ package co.edu.poli.datos;
 
 import co.edu.poli.model.proveedor;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * DAO para proveedor - usa correo_id FK.
@@ -125,5 +127,36 @@ public class proveedorDAO {
             System.out.println("proveedorDAO -> deleteProveedor: Error al eliminar proveedor");
             System.out.println("Detalles: " + e.getMessage());
         }
+    }
+    public List<proveedor> listarProveedores() {
+        List<proveedor> lista = new ArrayList<>();
+
+        String sql = """
+            SELECT p.id_proveedor, p.nombre, c.correo, p.contrasena, p.calificaciones
+            FROM proveedor p
+            INNER JOIN correo c ON p.correo_id = c.id_correo
+        """;
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                proveedor p = new proveedor(
+                        rs.getInt("id_proveedor"),
+                        rs.getString("nombre"),
+                        rs.getString("correo"),
+                        rs.getString("contrasena"),
+                        rs.getInt("calificaciones")
+                );
+
+                lista.add(p);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("proveedorDAO -> listarProveedores ERROR: " + e.getMessage());
+        }
+
+        return lista;
     }
 }

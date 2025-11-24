@@ -6,38 +6,40 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
 
 <VBox spacing="20" alignment="CENTER"
       xmlns="http://javafx.com/javafx/8"
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="co.edu.poli.controller.GestionUsuarioController"
-      stylesheets="@../style/menu.css"
-      padding="20">
+      stylesheets="@../style/menu.css">
+
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
 
     <Label text="Gestión de Usuarios"
-           style="-fx-font-size: 26px; -fx-font-weight: bold;" />
+           style="-fx-font-size: 28px; -fx-font-weight: bold;" />
 
-    <TableView fx:id="tablaUsuarios" prefWidth="750" prefHeight="350">
+    <TableView fx:id="tablaUsuarios" prefWidth="800" prefHeight="400">
         <columns>
             <TableColumn fx:id="colId" text="ID" prefWidth="80"/>
-            <TableColumn fx:id="colNombre" text="Nombre" prefWidth="150"/>
-            <TableColumn fx:id="colCorreo" text="Correo" prefWidth="200"/>
+            <TableColumn fx:id="colNombre" text="Nombre" prefWidth="180"/>
+            <TableColumn fx:id="colCorreo" text="Correo" prefWidth="220"/>
             <TableColumn fx:id="colRol" text="Rol" prefWidth="120"/>
             <TableColumn fx:id="colDireccion" text="Dirección" prefWidth="200"/>
         </columns>
     </TableView>
 
-    <HBox spacing="20" alignment="CENTER">
-        <Button text="Registrar Usuario"
-                prefWidth="200"
-                onAction="#abrirRegistrarUsuario"/>
-
+    <HBox spacing="30" alignment="CENTER">
         <Button text="Eliminar Usuario"
-                prefWidth="200"
+                prefWidth="220"
+                style="-fx-background-color: #c62828; -fx-text-fill: white; -fx-font-weight: bold;"
                 onAction="#eliminarUsuario"/>
 
         <Button text="Volver"
-                prefWidth="200"
+                prefWidth="220"
+                style="-fx-background-color: #1976d2; -fx-text-fill: white; -fx-font-weight: bold;"
                 onAction="#volverMenu"/>
     </HBox>
 

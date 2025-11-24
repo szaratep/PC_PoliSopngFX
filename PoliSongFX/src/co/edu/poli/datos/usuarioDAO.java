@@ -2,6 +2,8 @@ package co.edu.poli.datos;
 
 import co.edu.poli.model.usuario;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * DAO para la entidad usuario (corregido para usar correo_id FK).
@@ -129,4 +131,32 @@ public class usuarioDAO {
             System.out.println("Detalles: " + e.getMessage());
         }
     }
+    
+    public List<usuario> listarUsuarios() {
+        List<usuario> lista = new ArrayList<>();
+
+        String sql = "SELECT u.id_usuario, u.nombre, c.correo " +
+                     "FROM usuario u INNER JOIN correo c ON u.correo_id = c.id_correo";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                usuario u = new usuario(
+                        rs.getInt("id_usuario"),
+                        rs.getString("nombre"),
+                        rs.getString("correo"),
+                        "N/A"
+                );
+                lista.add(u);
+            }
+
+        } catch (Exception e) {
+            System.out.println("usuarioDAO -> listarUsuarios ERROR: " + e.getMessage());
+        }
+
+        return lista;
+    }
+
 }
